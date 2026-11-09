@@ -140,10 +140,10 @@ export function mountModel(container, url, missing) {
       layer.traverse(mesh => {
         if (!mesh.isMesh) return;
         for (const material of [mesh.material].flat()) {
-          // White ink stays white on the underside. Bias its depth toward
-          // the camera so it does not compete with the nearby solder mask.
+          // Keep the soft white ink readable on either face. Bias its depth
+          // toward the camera so it does not compete with the solder mask.
           material.color.set(0x000000);
-          material.emissive.set(0xffffff);
+          material.emissive.set(0xd5d5d5);
           material.emissiveIntensity = 1;
           material.toneMapped = false;
           material.polygonOffset = true;
