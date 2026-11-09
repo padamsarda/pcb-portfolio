@@ -105,7 +105,7 @@ def export_geometry(spec, board, file, folder):
     with tempfile.TemporaryDirectory(dir=folder) as scratch:
         result = run("pcb", "export", "svg", "--mode-multi", "--page-size-mode",
                      "2" if board_box == edge_box else "1", "--layers", ",".join(layers),
-                     "--drill-shape-opt", "2", "-o", scratch, file)
+                     "--exclude-drawing-sheet", "--drill-shape-opt", "2", "-o", scratch, file)
         if result.returncode:
             print(f"{spec['id']} PCB: {result.stderr[-450:]}", flush=True)
         plots = {}

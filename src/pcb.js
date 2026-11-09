@@ -38,7 +38,7 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
   const drawOrder = [...plots].sort((a, b) => Number(a.startsWith('F.')) - Number(b.startsWith('F.')))
     .sort((a, b) => Number(isSilk(a)) - Number(isSilk(b)) || Number(a === 'Edge.Cuts') - Number(b === 'Edge.Cuts'));
   const images = new Map(drawOrder.map(name => {
-    const layer = svgNode('image', {href: asset(board.plots[name]), width, height, opacity: name.endsWith('.Cu') ? .85 : 1});
+    const layer = svgNode('image', {href: asset(board.plots[name]) + '?frame=off', width, height, opacity: name.endsWith('.Cu') ? .85 : 1});
     group.append(layer);
     return [name, layer];
   }));
