@@ -14,16 +14,16 @@ Open the local URL printed by Vite. Use the board index to browse the full archi
 ## Explore a board
 
 - **PCB** shows the KiCad copper, silkscreen, fabrication, courtyard, and board outline plots. Drag to pan, scroll to zoom, or use Fit. The scale bar is in millimetres and the percentage is relative to the fitted view.
-- **Design notes** use selected wording from the project documentation. Part names and reference designators move the PCB camera to their footprint. The viewer respects the browser’s reduced-motion setting.
+- **Design notes** use selected wording from the project documentation. Part names and reference designators move the PCB camera to their footprint. Each board also has its source README or available project documentation, with the purpose and estimated build window above the notes.
 - **Schematic** provides the exported KiCad sheets with pan, zoom, and a sheet selector.
 - **3D** opens the KiCad GLB with orbit, zoom, and top-view controls. KiCad can omit component bodies when the corresponding library models are missing.
 - **BOM** groups PCB footprints by value, package, and purchasing metadata, including DNP markers. Selecting a reference opens it in the PCB viewer.
 
 ## Board sources
 
-The catalogue uses the local `3U-EM-PCB`, `Padam_PCBs`, `Comsat`, and SatNOGS KiCad designs. The résumé’s PCB list informed the selection. The OBC entry uses `main_OBC_updated`, with the older `Padam_PCBs` snapshot listed separately. The BQ24650 PCB comes from a local KiCad backup because the checked-out project and its GitHub repository contain the schematic, STEP and fabrication files.
+The catalogue uses the local `3U-EM-PCB`, `Padam_PCBs`, `Comsat`, and SatNOGS KiCad designs. The résumé’s PCB list informed the selection. The OBC uses the latest local board files and the original BeagleBone Black and Celeste STEP models. The BQ24650 PCB comes from a local KiCad backup because the checked-out project and its GitHub repository contain the schematic, STEP and fabrication files.
 
-Build duration is displayed when recorded. CAD update dates describe documented revisions or exports. Layout studies and templates can lack a closed outline, assembly BOM or 3D model.
+Estimated build windows use the main cluster of commits and KiCad backups where available. The evidence note on each board explains what supports its date range. Layout studies can lack a closed outline, assembly BOM or 3D model.
 
 ## Refresh assets
 

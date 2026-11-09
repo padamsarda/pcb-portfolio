@@ -65,10 +65,14 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
 
   const checks = new Map(plots.map(name => {
     const input = node('input', {type: 'checkbox'});
+    input.checked = !name.endsWith('.Fab');
     const swatch = node('span', {class: 'swatch', 'aria-hidden': 'true', style: '--swatch:' + layerColor(name)});
     layers.append(node('label', {class: 'layer-row', title: name}, input, swatch,
       node('span', {class: 'layer-name'}, name.replace('Silkscreen', 'Silk'))));
-    input.onchange = () => images.get(name).style.display = input.checked ? '' : 'none';
+    input.onchange = () => {
+      const facesViewer = name.startsWith(flipped ? 'B.' : 'F.');
+      images.get(name).style.display = input.checked && (!isSilk(name) || facesViewer) ? '' : 'none';
+    };
     return [name, input];
   }));
 
@@ -78,11 +82,12 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
     back.setAttribute('aria-pressed', String(flipped));
     group.setAttribute('transform', flipped ? 'translate(' + width + ' 0) scale(-1 1)' : '');
     heading.textContent = flipped ? 'BACK / MIRRORED' : 'FRONT / TOP';
-    const side = flipped ? 'B.' : 'F.';
-    checks.forEach((input, name) => {
-      input.checked = name === 'Edge.Cuts' || name === side + 'Cu' || name === side + 'Silkscreen';
-      input.onchange();
-    });
+    checks.forEach(input => input.onchange());
+    const nearCopper = images.get(flipped ? 'B.Cu' : 'F.Cu');
+    const nearSilk = images.get(flipped ? 'B.Silkscreen' : 'F.Silkscreen');
+    for (const layer of [nearCopper, nearSilk, images.get('Edge.Cuts')]) {
+      if (layer) group.insertBefore(layer, overlay);
+    }
   }
 
   function render(report = true) {

@@ -17,6 +17,23 @@ dialog{border:1px solid var(--line);width:min(670px,calc(100% - 32px));max-heigh
 
 .layer-title{cursor:pointer}
 .jump-notes{display:none}
+.board-overview{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.board-overview p:not(.section-kicker){margin:0 0 12px;font-size:14px;line-height:1.55}
+.board-overview small{display:block;color:var(--muted);font-size:12px;line-height:1.45}
+.board-overview .pending-note{color:#75571d;margin-top:10px}
+.board-readme{margin-top:18px;border-top:1px solid var(--line);font-size:14px}
+.board-readme summary{cursor:pointer;padding:12px 0;color:var(--accent);font-weight:650}
+.workbench:has(.board-readme[open]){align-items:start}
+.readme-content{line-height:1.55;overflow-wrap:anywhere;overflow-x:auto}
+.readme-content h1{font-size:1.5em}
+.readme-content h2{font-size:1.2em}
+.readme-content ol,.readme-content ul{display:block;list-style:revert;padding-left:1.5em}
+.readme-content li{display:list-item;border:0;padding:2px 0}
+.readme-content li::before{content:none}
+.readme-content table{border-collapse:collapse}
+.readme-content th,.readme-content td{border:1px solid var(--line);padding:5px;text-align:left}
+.readme-content pre{overflow:auto;background:#eeeee6;padding:8px}
+.readme-content img{max-width:100%;height:auto}
 #board-catalogue{margin:30px 0 0;padding:24px 0;border-top:1px solid var(--line)}
 #catalogue-title{margin:0;font-size:32px;letter-spacing:-.05em}
 #catalogue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:0 24px}

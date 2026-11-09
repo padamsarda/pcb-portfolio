@@ -108,27 +108,86 @@ def export_geometry(spec, board, file, folder):
                 copper=board.GetCopperLayerCount(), thickness=mm(board.GetDesignSettings().GetBoardThickness()))
 
 
+def export_model(spec, file, folder, details):
+    if not details.get("hasOutline") or not file.exists():
+        return
+    model = folder / "board.glb"
+    model_dir = (WORKSPACE / spec["source"]).parent
+    stack_dir = WORKSPACE / "3U-EM-PCB" / "stackview" / "models" / spec.get("modelManifest", spec["id"])
+    manifest = stack_dir / "models.json"
+    stack_models = json.loads(manifest.read_text(encoding="utf-8")) if manifest.exists() else {}
+    overrides = spec.get("modelOverrides", {})
+    def resolve(match):
+        raw = match[1]
+        expanded = raw.replace("${KIPRJMOD}", model_dir.as_posix())
+        expanded = re.sub(r"\$\{KICAD\d+_3DMODEL_DIR\}", MODELS.as_posix(), expanded)
+        path = Path(expanded)
+        if not path.is_absolute():
+            path = model_dir / path
+        if raw in overrides:
+            path = WORKSPACE / overrides[raw]
+        replacement = stack_models.get("replace", {}).get(Path(raw).name)
+        if isinstance(replacement, str):
+            replacement = {"file": replacement}
+        clause = match[2]
+        if replacement:
+            path = stack_dir / replacement["file"]
+            for field in ("offset", "rotate"):
+                if field in replacement:
+                    xyz = " ".join(map(str, replacement[field]))
+                    clause = re.sub(r"\(" + field + r"\s*\(xyz [^)]*\)\s*\)", f"({field} (xyz {xyz}))", clause)
+        if not path.exists() and path.is_relative_to(MODELS):
+            candidates = [PROJECT / ".sources" / "kicad-models" / path.relative_to(MODELS),
+                          Path("C:/Program Files/KiCad/9.0/share/kicad/3dmodels") / path.relative_to(MODELS)]
+            path = next((candidate for candidate in candidates if candidate.is_file()), path)
+        if path.is_file():
+            return '(model "' + path.as_posix() + '"' + clause
+        print(f"{spec['id']} unavailable model source: {raw}", flush=True)
+        return match[0]
+
+    with tempfile.TemporaryDirectory() as scratch:
+        export_file = Path(scratch) / file.name
+        source = re.sub(r'\(model "([^"]+)"([^\n]*\n[\s\S]*?\n\t\t\))',
+                        resolve, file.read_text(encoding="utf-8"))
+        for extra in stack_models.get("add", []):
+            footprint = re.escape(extra["footprint"])
+            path = (stack_dir / extra["file"]).as_posix()
+            offset = " ".join(map(str, extra.get("offset", [0, 0, 0])))
+            rotate = " ".join(map(str, extra.get("rotate", [0, 0, 0])))
+            entry = f'\n\t\t(model "{path}" (offset (xyz {offset})) (scale (xyz 1 1 1)) (rotate (xyz {rotate})))'
+            source = re.sub(r'(\n\t\(footprint "' + footprint + r'"[\s\S]*?)(\n\t\))',
+                            lambda match: match[1] + entry + match[2], source)
+        export_file.write_text(source, encoding="utf-8")
+        output = Path(scratch) / "board.glb"
+        result = run("pcb", "export", "glb", "--force", "--subst-models", "--no-dnp",
+                     "--include-pads", "--include-silkscreen", "--include-soldermask",
+                     "-o", output, export_file)
+        if result.returncode or not output.exists() or output.stat().st_size >= 100_000_000:
+            print(f"{spec['id']} GLB export did not replace the existing model: {result.stderr[-350:]}", flush=True)
+            return
+        model.write_bytes(output.read_bytes())
+    details["model"] = model.name
+    details["missingModels"] = sorted(set(re.findall(r"Could not add 3D model for ([^.]+)\.", result.stdout + result.stderr)))
+    print(f"{spec['id']} model: {model.stat().st_size} bytes; missing {details['missingModels']}", flush=True)
+
+
 def export_board(spec, skip_models):
-    summary = {k: v for k, v in spec.items() if k != "source"}
+    summary = {k: v for k, v in spec.items() if k not in {"source", "modelOverrides", "modelManifest"}}
     folder = ASSETS / spec["id"]
     folder.mkdir(parents=True, exist_ok=True)
     saved = folder / "data.json"
     if REUSE and saved.exists():
-        return summarize(summary, json.loads(saved.read_text(encoding="utf-8")), folder)
+        details = json.loads(saved.read_text(encoding="utf-8"))
+        if REFRESH_MODELS and details["missingModels"]:
+            export_model(spec, pcb_source(spec)[0], folder, details)
+        return summarize(summary, details, folder)
     file, schematic = pcb_source(spec)
     if file.exists():
         board = pcb.LoadBoard(str(file))
         details = export_geometry(spec, board, file, folder)
-        model = folder / "board.glb"
-        missing = []
-        if not skip_models and details["hasOutline"]:
-            result = run("pcb", "export", "glb", "--force", "--subst-models", "--no-dnp",
-                         "--include-pads", "--include-silkscreen", "--include-soldermask",
-                         "-o", model, file)
-            missing = sorted(set(re.findall(r"Could not add 3D model for ([^.]+)\.", result.stdout + result.stderr)))
-            if result.returncode:
-                print(f"{spec['id']} GLB: {result.stderr[-350:]}", flush=True)
-        details.update(model=model.name if model.exists() else None, missingModels=missing)
+        details.update(model=None, missingModels=[])
+        if not skip_models:
+            export_model(spec, file, folder, details)
     else:
         details = dict(size=[], outline="", plots={}, parts=[], copper=0, model=None, missingModels=[])
         print(f"{spec['id']}: PCB source missing", flush=True)
@@ -169,12 +228,14 @@ def summarize(summary, details, folder):
 
 
 def main():
-    global REUSE
+    global REUSE, REFRESH_MODELS
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skip-models", action="store_true")
     parser.add_argument("--reuse", action="store_true", help="Keep existing CAD exports and refresh the catalogue.")
+    parser.add_argument("--refresh-models", action="store_true", help="Retry 3D exports with unresolved model references when reusing CAD assets.")
     args = parser.parse_args()
     REUSE = args.reuse
+    REFRESH_MODELS = args.refresh_models
     specs = json.loads((PROJECT / "tools" / "boards.json").read_text(encoding="utf-8"))
     summaries = [export_board(spec, args.skip_models) for spec in specs]
     (ASSETS / "index.json").write_text(json.dumps(summaries, ensure_ascii=False, indent=2), encoding="utf-8")

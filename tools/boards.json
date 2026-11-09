@@ -2,11 +2,10 @@
   {
     "id": "adcs",
     "title": "ADCS",
-    "group": "3U engineering model",
+    "group": "Main projects",
     "source": "3U-EM-PCB/5.ADCS/main_ADCS/main_ADCS",
     "link": "",
     "rev": "EM rev 1.0",
-    "date": "23 Oct 2026",
     "notes": [
       "[[U2|STM32H753ZIT6]] controller with the original [[U3|Adafruit 2472 BNO055 breakout]].",
       "25 MHz crystal, 8 pF load · [[Y1|ECS-250-8-33B-CTN-TR]]",
@@ -15,41 +14,43 @@
       "The USB regulator is [[U6|TLV1117LV33DCYR]] U6. [[U7|TPS22918DBVR]] U7 ramps the USB supply to the board.",
       "Fit one two-pin shunt on power selector [[J8|J8]]. Change the selection with all power off.",
       "NRST test point [[TP11|TP11]] is beside SWD header [[J6|J6]]."
-    ]
-  },
-  {
-    "id": "wheel",
-    "title": "Reaction wheel carrier",
-    "group": "3U engineering model",
-    "source": "3U-EM-PCB/6.ReactionWheel/main_ReactionWheel/main_ReactionWheel",
-    "link": "",
-    "rev": "Placement review",
-    "date": "29 Oct 2026",
-    "notes": [
-      "The schematic is rebuilt for four Readytosky MT2204 2300KV CW motors, an external NUCLEO-H753ZI, four DRV8311H stages, four AS5047U encoder daughterboards and CAN_A to PC/104."
-    ]
+    ],
+    "purpose": "Attitude determination and control for the 3U engineering model.",
+    "buildTime": "9–27 Sep 2026",
+    "buildEvidence": "KiCad backups and the main September commit cluster.",
+    "readme": "readme.md"
   },
   {
     "id": "obc",
-    "title": "OBC · updated",
-    "group": "3U engineering model",
+    "title": "OBC",
+    "documentationLabel": "Read fabrication notes",
+    "group": "Main projects",
     "source": "3U-EM-PCB/2.OBC/main_OBC_updated/main_OBC",
     "link": "",
-    "rev": "Updated CAN",
-    "date": "2 Nov 2026",
+    "rev": "BeagleBone Black · Celeste GNSS",
     "notes": [
+      "[[U2|BeagleBone Black]] and [[J1|Celeste GNSS receiver]]",
       "4-layer FR4, 1.6 mm, 1 oz copper per layer.",
       "[[U3|CAN]] wiring rechecked from saved pad nets."
-    ]
+    ],
+    "purpose": "Host the BeagleBone Black and Celeste GNSS receiver, and connect them to the CubeSat stack.",
+    "buildTime": "11–27 Sep 2026",
+    "buildEvidence": "OBC commit cluster through fabrication export. The later CAN work is outside this window.",
+    "readme": "readme.md",
+    "modelOverrides": {
+      "${KIPRJMOD}/3Dmodels/BEAGLEBONE_BLACK.STEP": "3U-EM-PCB/2.OBC/main_OBC/3Dmodels/BEAGLEBONE_BLACK.STEP",
+      "${KIPRJMOD}/3Dmodels/2x23 Male Pin Header.STEP": "3U-EM-PCB/2.OBC/main_OBC/3Dmodels/2x23 Male Pin Header.STEP",
+      "${KIPRJMOD}/3Dmodels/cadmodel-celeste/celeste_gnss_rx_V3b_low_detail.step": "3U-EM-PCB/2.OBC/main_OBC/3Dmodels/cadmodel-celeste/celeste_gnss_rx_V3b_low_detail.step",
+      "${KIPRJMOD}/3Dmodels/543630689.stp": "3U-EM-PCB/2.OBC/main_OBC/3Dmodels/543630689.stp"
+    }
   },
   {
     "id": "battery",
     "title": "Battery board",
-    "group": "3U engineering model",
+    "group": "Main projects",
     "source": "3U-EM-PCB/8.BatteryBoard/main_battery/main_battery",
     "link": "",
     "rev": "4S2P",
-    "date": "",
     "notes": [
       "4S2P battery interface using [[BQ76952|BQ76952PFBR]] with direct stack I2C_A.",
       "[[J4|J4]] / [[J8|J8]] · Pack B+ / B-",
@@ -59,7 +60,72 @@
       "[[J11|J11]] · Heater",
       "[[SW2|SW2]] · BQ wake",
       "EPS supplies the I2C pull-ups and must configure the BQ before enabling its FETs."
-    ]
+    ],
+    "purpose": "Connect a 4S2P pack to the CubeSat stack and manage battery protection and monitoring.",
+    "buildTime": "9 Sep–6 Oct 2026",
+    "buildEvidence": "KiCad backups and the September to early October commit cluster.",
+    "readme": "readme.md"
+  },
+  {
+    "id": "mtq-driver",
+    "title": "Magnetorquer test driver",
+    "group": "Main projects",
+    "source": "Padam_PCBs/MT_test_driver/MT_test_driver",
+    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
+    "rev": "Test board",
+    "notes": [
+      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
+      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
+      "[[U3|INA219AID]] · High-side current and power monitor",
+      "[[U6|TJA1051T/3]] · CAN transceiver"
+    ],
+    "aliases": [
+      "MTQ test driver",
+      "magnet walker test driver"
+    ],
+    "purpose": "Drive and characterize magnetorquer coils at different voltages, currents and temperatures.",
+    "buildTime": "12–18 Jun 2026",
+    "buildEvidence": "June commit and KiCad backup cluster, before isolated July activity.",
+    "readme": "readme.md"
+  },
+  {
+    "id": "feather",
+    "title": "Feather SAMD21 Watchdog",
+    "group": "Main projects",
+    "source": "Padam_PCBs/feather-SAMD21&WD/feather-SAMD21&WD",
+    "link": "https://github.com/padamsarda/feather-SAMD21-WD",
+    "rev": "Feather M0 footprint",
+    "notes": [
+      "A Feather-compatible development board based on the [[U3|ATSAMD21G18A]] microcontroller with an integrated [[WD|MAX6373]] hardware watchdog for improving system reliability.",
+      "The board retains the Adafruit Feather M0 Express footprint and pinout while incorporating [[J8|USB Type-C]] connectivity, [[U5|Li-Po battery charging]], [[U2|USB protection]], and external clock circuitry.",
+      "A [[U7|555 monostable circuit]] enables MCU power cycling, while multiple jumper options allow sections of the watchdog and reset circuitry to be enabled, disabled, or bypassed as required.",
+      "External RTC clock source · [[X1|32.768 kHz Crystal]]"
+    ],
+    "purpose": "Build a Feather-compatible SAMD21 development board with a hardware watchdog and MCU power cycling.",
+    "buildTime": "6–12 Jul 2026",
+    "buildEvidence": "KiCad backups and the main July commit cluster.",
+    "readme": "readme.md"
+  },
+  {
+    "id": "bq24650",
+    "title": "BQ24650 solar charger",
+    "group": "Main projects",
+    "source": "Padam_PCBs/BQ24650_1U_SolarChargerBoard/BQ24650_1U_SolarChargerBoard copy",
+    "link": "https://github.com/padamsarda/BQ24650_1U_SolarChargerBoard",
+    "rev": "1U evaluation",
+    "notes": [
+      "A dev/eval board for the [[U1|TI BQ24650]] standalone solar battery charger IC.",
+      "[[RV1|Potentiometer]] · Battery regulation voltage adjustment",
+      "[[RV2|Potentiometer]] · MPPT voltage adjustment"
+    ],
+    "aliases": [
+      "Padam PCBs solar charger",
+      "1U solar charger"
+    ],
+    "purpose": "Evaluate the BQ24650 solar battery charger and its adjustable battery regulation and MPPT voltages.",
+    "buildTime": "23–27 Jun 2026",
+    "buildEvidence": "Initial commit and KiCad backup cluster, before scattered later revisions.",
+    "readme": "readme.md"
   },
   {
     "id": "pc104",
@@ -68,25 +134,15 @@
     "source": "3U-EM-PCB/0.Standard/AnantSAT-PC104/PC104-Board",
     "link": "",
     "rev": "Stack standard · full CAD drawing",
-    "date": "",
     "notes": [
       "Board: 95.89 x 90.17 mm, R5.08 corners, 104 pads at 2.54 mm pitch.",
       "H1 (pins 53-104) carries power; H2 (pins 1-52) carries signals.",
       "The four mounting holes are deliberately asymmetric."
-    ]
-  },
-  {
-    "id": "solar",
-    "title": "MCU-controlled solar charger",
-    "group": "Modules",
-    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
-    "link": "",
-    "rev": "Review prototype",
-    "date": "",
-    "notes": [
-      "This module uses an external EPS MCU through [[J7|J7]].",
-      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
-    ]
+    ],
+    "purpose": "Define the mechanical outline and power and signal pin assignments for the stack.",
+    "buildTime": "5–24 Sep 2026",
+    "buildEvidence": "September KiCad backups and commits.",
+    "readme": "readme.md"
   },
   {
     "id": "mtq-carrier",
@@ -95,7 +151,6 @@
     "source": "3U-EM-PCB/DevelopmentBoards/carrier_MTQ/carrier_MTQ",
     "link": "",
     "rev": "Bench carrier",
-    "date": "4 Nov 2026",
     "notes": [
       "Module bodies may overhang; electrical pads stay inside the carrier.",
       "[[U1|U1]] · Dual driver: M1 X, M2 Y",
@@ -106,34 +161,28 @@
       "MTQ driver",
       "Magnetorquer test carrier",
       "magnet walker driver"
-    ]
-  },
-  {
-    "id": "lt8491",
-    "title": "LT8491 evaluation board",
-    "group": "Modules",
-    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
-    "link": "",
-    "rev": "Evaluation",
-    "date": "",
-    "notes": [
-      "A single-channel MPPT buck-boost charger for a 4S battery.",
-      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
-      "The schematic and placement are available; signal routing is still in progress."
-    ]
+    ],
+    "purpose": "Carry the magnetorquer drivers and current monitors for the three coil axes.",
+    "buildTime": "3–4 Nov 2026",
+    "buildEvidence": "KiCad backups followed by the fabrication commit cluster.",
+    "readme": "readme.md"
   },
   {
     "id": "rail",
+    "modelManifest": "obc",
     "title": "Rail controller (TPS2596xx)",
     "group": "Modules",
     "source": "3U-EM-PCB/DevelopmentBoards/module_railcontroller/module_TPS2596xx",
     "link": "",
     "rev": "TPS2596xx",
-    "date": "4 Nov 2026",
     "notes": [
       "eFuse U1: [[U1|TPS2596xx]]; current monitor U2: [[U2|INA219]]; load switch U3: [[U3|TPS22917]].",
       "Edge outline approximately 49.53 x 20.32 mm, two layers, 1.6 mm thickness."
-    ]
+    ],
+    "purpose": "Switch and protect a power rail while measuring its current.",
+    "buildTime": "29 Oct–4 Nov 2026",
+    "buildEvidence": "KiCad backups and rail-controller commits.",
+    "readme": "readme.md"
   },
   {
     "id": "buck",
@@ -142,79 +191,16 @@
     "source": "3U-EM-PCB/DevelopmentBoards/module_buck5V_TPS54302/module_buck5V_TPS54302",
     "link": "",
     "rev": "5 V / 3.3 V",
-    "date": "4 Nov 2026",
     "notes": [
       "A compact buck converter for an 11-17 V battery supply. The same PCB supports 5 V or 3.3 V with the component values below. Normal load target: 1 A.",
       "Input and output are on opposite short edges. Screw terminals face up; breadboard headers face down.",
       "[[U1|TPS54302DDCR]] · [[L1|10 uH]]",
       "[[J7|J7]]: jumper 1-2 = ON, 2-3 = OFF; no jumper = OFF."
-    ]
-  },
-  {
-    "id": "encoder",
-    "title": "Shaft encoder",
-    "group": "Modules",
-    "source": "3U-EM-PCB/6.ReactionWheel/module_AS5047U/module_AS5047U",
-    "link": "",
-    "rev": "Placement review",
-    "date": "29 Oct 2026",
-    "notes": [
-      "Each encoder board is 22 x 22 mm, built four times.",
-      "[[U1|AS5047U]] encoder daughterboards",
-      "Separate shaft encoder schematic and placed PCB, four copies required."
-    ]
-  },
-  {
-    "id": "mtq-driver",
-    "title": "Magnetorquer test driver",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/MT_test_driver/MT_test_driver",
-    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
-    "rev": "Test board",
-    "date": "",
-    "notes": [
-      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
-      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
-      "[[U3|INA219AID]] · High-side current and power monitor",
-      "[[U6|TJA1051T/3]] · CAN transceiver"
     ],
-    "aliases": [
-      "MTQ test driver",
-      "magnet walker test driver"
-    ]
-  },
-  {
-    "id": "feather",
-    "title": "Feather SAMD21 Watchdog",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/feather-SAMD21&WD/feather-SAMD21&WD",
-    "link": "https://github.com/padamsarda/feather-SAMD21-WD",
-    "rev": "Feather M0 footprint",
-    "date": "",
-    "notes": [
-      "A Feather-compatible development board based on the [[U3|ATSAMD21G18A]] microcontroller with an integrated [[WD|MAX6373]] hardware watchdog for improving system reliability.",
-      "The board retains the Adafruit Feather M0 Express footprint and pinout while incorporating [[J8|USB Type-C]] connectivity, [[U5|Li-Po battery charging]], [[U2|USB protection]], and external clock circuitry.",
-      "A [[U7|555 monostable circuit]] enables MCU power cycling, while multiple jumper options allow sections of the watchdog and reset circuitry to be enabled, disabled, or bypassed as required.",
-      "External RTC clock source · [[X1|32.768 kHz Crystal]]"
-    ]
-  },
-  {
-    "id": "bq24650",
-    "title": "BQ24650 solar charger",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/BQ24650_1U_SolarChargerBoard/BQ24650_1U_SolarChargerBoard copy",
-    "link": "https://github.com/padamsarda/BQ24650_1U_SolarChargerBoard",
-    "rev": "1U evaluation",
-    "date": "",
-    "notes": [
-      "A dev/eval board for the [[U1|TI BQ24650]] standalone solar battery charger IC.",
-      "[[RV1|Potentiometer]] · Battery regulation voltage adjustment",
-      "[[RV2|Potentiometer]] · MPPT voltage adjustment"
-    ],
-    "aliases": [
-      "Padam PCBs solar charger",
-      "1U solar charger"
-    ]
+    "purpose": "Convert the battery supply to a regulated 5 V or 3.3 V rail.",
+    "buildTime": "17–18 Oct 2026",
+    "buildEvidence": "The initial KiCad backup and commit cluster, before the November fabrication pass.",
+    "readme": "readme.md"
   },
   {
     "id": "rotator",
@@ -223,7 +209,6 @@
     "source": "satnogs-rotator-controller/satnogs-rotator-pcb",
     "link": "",
     "rev": "Ground station",
-    "date": "",
     "notes": [
       "A custom hardware implementation of a SatNOGS-style dual-axis rotator controller, designed to control Azimuth (AZ) and Elevation (EL) stepper motors and interface with a SatNOGS/Raspberry Pi system over RS-485.",
       "The controller is built around an [[A1|Arduino Nano (ATmega328P)]]",
@@ -231,22 +216,11 @@
       "[[U1|RS-485 communication]] with a Raspberry Pi / SatNOGS client",
       "[[IC1|I²C multiplexing]] for two same-address encoder devices",
       "Azimuth and Elevation [[P5|endstop inputs]]"
-    ]
-  },
-  {
-    "id": "cansat",
-    "title": "CanSat main board",
-    "group": "Additional projects",
-    "source": "Comsat/PCBS/one-U-main/one-U-main",
-    "link": "",
-    "rev": "CanSat",
-    "date": "",
-    "notes": [
-      "4-layer stackup: Layer 1 Signal / Layer 2 Power / Layer 3 Ground / Layer 4 Signal.",
-      "[[Feather|Adafruit Feather M0]] · OBC / C&DH (ATSAMD21, 48 MHz, 3.3 V)",
-      "[[A2|LoRa RFM96W]] · Primary comms payload, SPI",
-      "[[TPS63100|TPS63100]] · Buck-boost regulator → 3.3 V fixed rail (covers 2.5–4.2 V input)"
-    ]
+    ],
+    "purpose": "Drive the azimuth and elevation axes of a SatNOGS ground station rotator over RS-485.",
+    "buildTime": "9–27 Aug 2026",
+    "buildEvidence": "Available August commit cluster. Local October backups show later activity.",
+    "readme": "readme.md"
   },
   {
     "id": "battery-1u",
@@ -255,22 +229,15 @@
     "source": "Comsat/PCBS/one-U-battery/one-U-battery",
     "link": "",
     "rev": "1U",
-    "date": "",
     "notes": [
       "Holds the 1S6P cell pack with on-board protection circuitry.",
       "Protection · Over-charge and over-discharge circuit on-board",
       "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
-    ]
-  },
-  {
-    "id": "obc-local",
-    "title": "OBC · local snapshot",
-    "group": "Early boards and studies",
-    "source": "Padam_PCBs/main_OBC",
-    "link": "",
-    "rev": "Local design",
-    "date": "",
-    "notes": []
+    ],
+    "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
+    "buildTime": "13–16 Jul 2026",
+    "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
+    "readme": "readme.md"
   },
   {
     "id": "radio",
@@ -279,7 +246,6 @@
     "source": "Padam_PCBs/nrf-uno-sheild/nrf-uno-sheild",
     "link": "https://github.com/padamsarda/Arduino-TTC-shield",
     "rev": "Arduino Uno",
-    "date": "",
     "notes": [
       "This Arduino shield was made for testing and learning TTC systems.",
       "It combines both the [[u1|nRF24L01]] and [[loraRA02|LoRa RA-02]] modules on a single board, making it easy to switch between short- and long-range wireless communication during development.",
@@ -290,46 +256,78 @@
       "Arduino TTC shield",
       "nRF24L01",
       "LoRa RA-02"
-    ]
+    ],
+    "purpose": "Test the nRF24L01 and LoRa RA-02 on an Arduino Uno and measure module power draw.",
+    "buildTime": "17–20 Apr 2026",
+    "buildEvidence": "KiCad backup cluster through the first GitHub PCB commit on 20 April.",
+    "readme": "readme.md"
+  },
+  {
+    "id": "solar",
+    "title": "MCU-controlled solar charger",
+    "group": "Pending",
+    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
+    "link": "",
+    "rev": "Review prototype",
+    "notes": [
+      "This module uses an external EPS MCU through [[J7|J7]].",
+      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
+    ],
+    "purpose": "Prototype a four-switch solar charger controlled by an external EPS MCU.",
+    "buildTime": "3 Nov 2026",
+    "buildEvidence": "Single dated KiCad backup. Full development window is uncertain.",
+    "readme": "readme.md",
+    "pending": "Prototype review and validation pending."
+  },
+  {
+    "id": "lt8491",
+    "title": "LT8491 evaluation board",
+    "group": "Pending",
+    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
+    "link": "",
+    "rev": "Evaluation",
+    "notes": [
+      "A single-channel MPPT buck-boost charger for a 4S battery.",
+      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
+      "The schematic and placement are available; signal routing is still in progress."
+    ],
+    "purpose": "Evaluate a single-channel MPPT buck-boost charger for a 4S battery.",
+    "buildTime": "5–18 Oct 2026",
+    "buildEvidence": "First and last board commits available. Routing is pending.",
+    "readme": "readme.md",
+    "pending": "Signal routing is pending."
+  },
+  {
+    "id": "encoder",
+    "title": "Shaft encoder",
+    "group": "Pending",
+    "source": "3U-EM-PCB/6.ReactionWheel/module_AS5047U/module_AS5047U",
+    "link": "",
+    "rev": "Placement review",
+    "notes": [
+      "Each encoder board is 22 x 22 mm, built four times.",
+      "[[U1|AS5047U]] encoder daughterboards",
+      "Separate shaft encoder schematic and placed PCB, four copies required."
+    ],
+    "purpose": "Measure shaft angle for the reaction wheel using an AS5047U encoder.",
+    "buildTime": "29 Oct 2026",
+    "buildEvidence": "Dated placement review in the reaction-wheel README. Full development window is uncertain.",
+    "readme": "readme.md",
+    "pending": "Placement review only. Routing is pending."
   },
   {
     "id": "reaction-local",
     "title": "3U reaction wheel · local",
-    "group": "Early boards and studies",
+    "group": "Pending",
     "source": "Padam_PCBs/reaction_wheel 3U/reaction_wheel 3U",
     "link": "",
     "rev": "Local design",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "lora-footprint",
-    "title": "LoRa footprint study",
-    "group": "Early boards and studies",
-    "source": "Padam_PCBs/nrf-uno-sheild/lora_footprint/lora_footprint",
-    "link": "",
-    "rev": "Footprint study",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "random",
-    "title": "Random · layout study",
-    "group": "Early boards and studies",
-    "source": "Padam_PCBs/random/random",
-    "link": "",
-    "rev": "Layout study",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "template",
-    "title": "KiCad board template",
-    "group": "Early boards and studies",
-    "source": "Padam_PCBs/template_padam/template_padam",
-    "link": "",
-    "rev": "Template",
-    "date": "",
-    "notes": []
+    "notes": [],
+    "purpose": "Explore a controller schematic for a 3U reaction wheel.",
+    "buildTime": "18 Jun–6 Jul 2026",
+    "buildEvidence": "Related Notion schematic date and the saved local KiCad file date. Approximate, with no commit history for this copy.",
+    "readme": "readme.md",
+    "pending": "Schematic study. PCB placement and routing are pending.",
+    "documentationLabel": "Project documentation"
   }
 ]

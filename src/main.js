@@ -1,11 +1,33 @@
 import './style.css';
+import MarkdownIt from 'markdown-it';
 import { mountPCB } from './pcb.js';
 import { mountSchematic, mountBOM } from './views.js';
 
 const project = document.querySelector('#project');
 const index = document.querySelector('#index');
 const search = document.querySelector('#board-search');
-const featured = ['adcs', 'wheel', 'obc', 'battery', 'solar', 'mtq-driver', 'rail'];
+const markdown = new MarkdownIt({html: false});
+const renderMarkdownImage = markdown.renderer.rules.image;
+markdown.renderer.rules.image = (tokens, i, options, env, renderer) => {
+  const token = tokens[i];
+  const src = token.attrGet('src');
+  if (!/^https?:\/\//i.test(src)) {
+    if (!env.repo?.startsWith('https://github.com/')) return markdown.utils.escapeHtml(token.content);
+    const raw = env.repo.replace('https://github.com/', 'https://raw.githubusercontent.com/') + '/HEAD/';
+    token.attrSet('src', new URL(src, raw).href);
+  }
+  token.attrSet('loading', 'lazy');
+  return renderMarkdownImage(tokens, i, options, env, renderer);
+};
+markdown.renderer.rules.link_open = (tokens, i, options, env, renderer) => {
+  const token = tokens[i];
+  const href = token.attrGet('href');
+  if (href && !/^(https?:\/\/|#)/i.test(href)) {
+    if (env.repo) token.attrSet('href', new URL(href, env.repo + '/tree/HEAD/').href);
+    else token.attrs = token.attrs.filter(([name]) => name !== 'href');
+  }
+  return renderer.renderToken(tokens, i, options);
+};
 const root = import.meta.env.BASE_URL + 'boards/';
 const views = [['pcb', 'PCB'], ['schematic', 'Schematic'], ['model', '3D'], ['bom', 'BOM']];
 let archive = [];
@@ -53,8 +75,8 @@ function locate(part, fromNotes = false) {
 
 function renderNav() {
   const nav = document.querySelector('#project-nav');
-  nav.replaceChildren(...featured.map((id, i) => {
-    const item = archive.find(b => b.id === id);
+  nav.replaceChildren(...archive.filter(b => b.group === 'Main projects' && !b.pending).map((item, i) => {
+    const {id} = item;
     return node('a', {href: '#' + id, class: 'project-link', 'aria-current': current.id === id ? 'page' : 'false'},
       node('i', {}, String(i + 1).padStart(2, '0')), item.title);
   }));
@@ -78,7 +100,7 @@ function renderBoardList(list, boards, onOpen) {
   list.replaceChildren(...Array.from(groups, ([group, items]) => node('section', {class: 'index-group'},
     node('h3', {}, group), ...items.map(item => {
       const link = node('a', {href: '#' + item.id, 'aria-current': current?.id === item.id ? 'page' : 'false'},
-        item.title, node('small', {}, item.size.length ? item.size.map(n => n.toFixed(1)).join(' × ') + ' mm' : item.rev));
+        item.title, node('small', {}, item.pending ? 'Pending' : item.size.length ? item.size.map(n => n.toFixed(1)).join(' × ') + ' mm' : item.rev));
       link.onclick = onOpen;
       return link;
     }))));
@@ -86,7 +108,15 @@ function renderBoardList(list, boards, onOpen) {
 }
 
 function renderNotes() {
+  const overview = node('div', {class: 'board-overview'},
+    node('p', {class: 'section-kicker'}, 'Purpose'),
+    node('p', {}, current.purpose),
+    node('p', {class: 'section-kicker'}, 'Estimated build window'),
+    node('p', {}, current.buildTime),
+    node('small', {}, current.buildEvidence));
+  if (current.pending) overview.append(node('p', {class: 'pending-note'}, 'Pending · ' + current.pending));
   const section = node('aside', {class: 'notes', 'aria-labelledby': 'notes-title'},
+    overview,
     node('div', {class: 'notes-head'}, node('p', {class: 'section-kicker'}, current.notes.length ? 'From the project notes' : 'From the KiCad design'),
       node('h2', {id: 'notes-title'}, 'Design notes')));
   const mentioned = new Set();
@@ -114,7 +144,25 @@ function renderNotes() {
   if (parts.length) section.append(node('div', {class: 'parts-panel'},
     node('p', {class: 'section-kicker'}, 'Locate on PCB'),
     node('div', {class: 'part-pills'}, ...parts.map(p => partButton(p, p.ref + ' · ' + p.value, 'pill')))));
-  if (current.link) section.append(node('a', {href: current.link, class: 'project-source'}, 'Project README ↗'));
+  const readmeUrl = asset(current.readme);
+  const repo = current.link;
+  const content = node('div', {class: 'readme-content'});
+  const readme = node('details', {class: 'board-readme'},
+    node('summary', {}, current.documentationLabel || 'Read full README'), content);
+  readme.ontoggle = async () => {
+    if (!readme.open || content.childNodes.length) return;
+    content.textContent = 'Loading documentation…';
+    try {
+      const response = await fetch(readmeUrl);
+      if (!response.ok) throw new Error('Documentation unavailable');
+      content.innerHTML = markdown.render(await response.text(), {repo});
+    } catch {
+      content.replaceChildren(node('p', {}, 'Could not load the documentation.'),
+        node('a', {href: readmeUrl}, 'Open the source text'));
+    }
+  };
+  section.append(readme);
+  if (repo) section.append(node('a', {href: repo, class: 'project-source'}, 'GitHub project ↗'));
   return section;
 }
 
@@ -123,9 +171,7 @@ function renderProject() {
     ['Scale', 'Fit', 'scale'],
     ['Board size', current.size.length ? current.size.map(n => n.toFixed(2)).join(' × ') + ' mm' : 'No board outline'],
     ['Stackup', current.copper ? current.copper + 'L' + (current.thickness ? ' · ' + current.thickness + ' mm' : '') : '—'],
-    ['Build time', current.buildTime || 'Unrecorded'],
   ];
-  if (current.date) specs.push(['CAD update', current.date]);
   const hero = node('section', {class: 'hero'},
     node('div', {}, node('p', {class: 'eyebrow'}, current.group + ' / ' + String(archive.indexOf(current) + 1).padStart(2, '0')),
       node('h1', {}, current.title), node('p', {class: 'revision'}, current.rev)),
