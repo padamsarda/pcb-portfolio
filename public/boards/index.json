@@ -1,58 +1,7 @@
 [
   {
-    "id": "adcs",
-    "title": "ADCS",
-    "group": "Main projects",
-    "link": "",
-    "rev": "EM rev 1.0",
-    "notes": [
-      "[[U2|STM32H753ZIT6]] controller with the original [[U3|Adafruit 2472 BNO055 breakout]].",
-      "25 MHz crystal, 8 pF load · [[Y1|ECS-250-8-33B-CTN-TR]]",
-      "CAN transceiver · [[U4|TCAN332DR]]",
-      "USB ESD protection · [[U5|USBLC6-2SC6]]",
-      "The USB regulator is [[U6|TLV1117LV33DCYR]] U6. [[U7|TPS22918DBVR]] U7 ramps the USB supply to the board.",
-      "Fit one two-pin shunt on power selector [[J8|J8]]. Change the selection with all power off.",
-      "NRST test point [[TP11|TP11]] is beside SWD header [[J6|J6]]."
-    ],
-    "purpose": "Attitude determination and control for the 3U engineering model.",
-    "buildTime": "September 2026",
-    "buildEvidence": "KiCad backups and the main September commit cluster.",
-    "readme": "readme.md",
-    "size": [
-      95.885,
-      90.17
-    ],
-    "copper": 2,
-    "thickness": 1.6,
-    "parts": 60
-  },
-  {
-    "id": "obc",
-    "title": "OBC",
-    "documentationLabel": "Read fabrication notes",
-    "group": "Main projects",
-    "link": "",
-    "rev": "BeagleBone Black · Celeste GNSS",
-    "notes": [
-      "[[U2|BeagleBone Black]] and [[J1|Celeste GNSS receiver]]",
-      "4-layer FR4, 1.6 mm, 1 oz copper per layer.",
-      "[[U3|CAN]] wiring rechecked from saved pad nets."
-    ],
-    "purpose": "Host the BeagleBone Black and Celeste GNSS receiver, and connect them to the CubeSat stack.",
-    "buildTime": "September 2026",
-    "buildEvidence": "OBC commit cluster through fabrication export. The later CAN work is outside this window.",
-    "readme": "readme.md",
-    "size": [
-      95.885,
-      90.17
-    ],
-    "copper": 4,
-    "thickness": 1.6,
-    "parts": 20
-  },
-  {
     "id": "battery",
-    "title": "Battery board",
+    "title": "3U Battery Board",
     "group": "Main projects",
     "link": "",
     "rev": "4S2P",
@@ -82,55 +31,55 @@
     "parts": 90
   },
   {
-    "id": "battery-1u",
-    "title": "1U battery board",
+    "id": "obc",
+    "title": "OBC",
+    "documentationLabel": "Read fabrication notes",
     "group": "Main projects",
     "link": "",
-    "rev": "1U",
+    "rev": "BeagleBone Black · Celeste GNSS",
     "notes": [
-      "Holds the 1S6P cell pack with on-board protection circuitry.",
-      "Protection · Over-charge and over-discharge circuit on-board",
-      "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
+      "[[U2|BeagleBone Black]] and [[J1|Celeste GNSS receiver]]",
+      "4-layer FR4, 1.6 mm, 1 oz copper per layer.",
+      "[[U3|CAN]] wiring rechecked from saved pad nets."
     ],
-    "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
-    "buildTime": "July 2026",
-    "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
+    "purpose": "Host the BeagleBone Black and Celeste GNSS receiver, and connect them to the CubeSat stack.",
+    "buildTime": "September 2026",
+    "buildEvidence": "OBC commit cluster through fabrication export. The later CAN work is outside this window.",
     "readme": "readme.md",
     "size": [
-      79.9846,
-      79.9846
+      95.885,
+      90.17
     ],
-    "copper": 2,
+    "copper": 4,
     "thickness": 1.6,
-    "parts": 23
+    "parts": 20
   },
   {
-    "id": "mtq-driver",
-    "title": "Magnetorquer test driver",
+    "id": "adcs",
+    "title": "ADCS",
     "group": "Main projects",
-    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
-    "rev": "Test board",
+    "link": "",
+    "rev": "EM rev 1.0",
     "notes": [
-      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
-      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
-      "[[U3|INA219AID]] · High-side current and power monitor",
-      "[[U6|TJA1051T/3]] · CAN transceiver"
+      "[[U2|STM32H753ZIT6]] controller with the original [[U3|Adafruit 2472 BNO055 breakout]].",
+      "25 MHz crystal, 8 pF load · [[Y1|ECS-250-8-33B-CTN-TR]]",
+      "CAN transceiver · [[U4|TCAN332DR]]",
+      "USB ESD protection · [[U5|USBLC6-2SC6]]",
+      "The USB regulator is [[U6|TLV1117LV33DCYR]] U6. [[U7|TPS22918DBVR]] U7 ramps the USB supply to the board.",
+      "Fit one two-pin shunt on power selector [[J8|J8]]. Change the selection with all power off.",
+      "NRST test point [[TP11|TP11]] is beside SWD header [[J6|J6]]."
     ],
-    "aliases": [
-      "MTQ test driver",
-      "magnet walker test driver"
-    ],
-    "purpose": "Drive and characterize magnetorquer coils at different voltages, currents and temperatures.",
-    "buildTime": "June 2026",
-    "buildEvidence": "June commit and KiCad backup cluster, before isolated July activity.",
+    "purpose": "Attitude determination and control for the 3U engineering model.",
+    "buildTime": "September 2026",
+    "buildEvidence": "KiCad backups and the main September commit cluster.",
     "readme": "readme.md",
     "size": [
-      71.1962,
-      46.482
+      95.885,
+      90.17
     ],
     "copper": 2,
     "thickness": 1.6,
-    "parts": 76
+    "parts": 60
   },
   {
     "id": "feather",
@@ -182,6 +131,57 @@
     "copper": 2,
     "thickness": 1.6,
     "parts": 48
+  },
+  {
+    "id": "mtq-driver",
+    "title": "Magnetorquer test driver",
+    "group": "Main projects",
+    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
+    "rev": "Test board",
+    "notes": [
+      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
+      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
+      "[[U3|INA219AID]] · High-side current and power monitor",
+      "[[U6|TJA1051T/3]] · CAN transceiver"
+    ],
+    "aliases": [
+      "MTQ test driver",
+      "magnet walker test driver"
+    ],
+    "purpose": "Drive and characterize magnetorquer coils at different voltages, currents and temperatures.",
+    "buildTime": "June 2026",
+    "buildEvidence": "June commit and KiCad backup cluster, before isolated July activity.",
+    "readme": "readme.md",
+    "size": [
+      71.1962,
+      46.482
+    ],
+    "copper": 2,
+    "thickness": 1.6,
+    "parts": 76
+  },
+  {
+    "id": "battery-1u",
+    "title": "1U battery board",
+    "group": "Main projects",
+    "link": "",
+    "rev": "1U",
+    "notes": [
+      "Holds the 1S6P cell pack with on-board protection circuitry.",
+      "Protection · Over-charge and over-discharge circuit on-board",
+      "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
+    ],
+    "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
+    "buildTime": "July 2026",
+    "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
+    "readme": "readme.md",
+    "size": [
+      79.9846,
+      79.9846
+    ],
+    "copper": 2,
+    "thickness": 1.6,
+    "parts": 23
   },
   {
     "id": "mtq-carrier",
