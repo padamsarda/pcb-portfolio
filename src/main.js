@@ -89,7 +89,7 @@ function renderNav() {
 function renderIndex() {
   const terms = search.value.toLowerCase().trim().split(/\s+/);
   const matches = archive.filter(b => {
-    const haystack = [b.id, b.title, b.group, b.rev, ...(b.aliases || [])].join(' ').toLowerCase();
+    const haystack = [b.id, b.title, b.group, b.rev, b.pending && 'Pending', ...(b.aliases || [])].join(' ').toLowerCase();
     return terms.every(term => haystack.includes(term));
   });
   renderBoardList(document.querySelector('#index-list'), matches, () => index.close());
@@ -97,13 +97,20 @@ function renderIndex() {
 
 function renderBoardList(list, boards, onOpen) {
   const groups = Map.groupBy(boards, b => b.group);
-  list.replaceChildren(...Array.from(groups, ([group, items]) => node('section', {class: 'index-group'},
-    node('h3', {}, group), ...items.map(item => {
-      const link = node('a', {href: '#' + item.id, 'aria-current': current?.id === item.id ? 'page' : 'false'},
-        item.title, node('small', {}, item.pending ? 'Pending' : item.size.length ? item.size.map(n => n.toFixed(1)).join(' × ') + ' mm' : item.rev));
-      link.onclick = onOpen;
-      return link;
-    }))));
+  function boardLink(item) {
+    const label = item.pending ? 'Pending' : item.size.length ? item.size.map(n => n.toFixed(1)).join(' × ') + ' mm' : item.rev;
+    const link = node('a', {href: '#' + item.id, 'aria-current': current?.id === item.id ? 'page' : 'false'},
+      item.title, node('small', {}, label));
+    link.onclick = onOpen;
+    return link;
+  }
+  list.replaceChildren(...Array.from(groups, ([group, items]) => {
+    const section = node('section', {class: 'index-group'}, node('h3', {}, group),
+      ...items.filter(item => !item.pending).map(boardLink));
+    const pending = items.filter(item => item.pending);
+    if (pending.length) section.append(node('h4', {class: 'archive-subheading'}, 'Pending'), ...pending.map(boardLink));
+    return section;
+  }));
   if (!groups.size) list.append(node('p', {class: 'empty-notes'}, 'No matching boards.'));
 }
 

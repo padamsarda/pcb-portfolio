@@ -70,6 +70,23 @@
     "readme": "readme.md"
   },
   {
+    "id": "battery-1u",
+    "title": "1U battery board",
+    "group": "Main projects",
+    "source": "Comsat/PCBS/one-U-battery/one-U-battery",
+    "link": "",
+    "rev": "1U",
+    "notes": [
+      "Holds the 1S6P cell pack with on-board protection circuitry.",
+      "Protection · Over-charge and over-discharge circuit on-board",
+      "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
+    ],
+    "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
+    "buildTime": "July",
+    "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
+    "readme": "readme.md"
+  },
+  {
     "id": "mtq-driver",
     "title": "Magnetorquer test driver",
     "group": "Main projects",
@@ -131,23 +148,6 @@
     "readme": "readme.md"
   },
   {
-    "id": "pc104",
-    "title": "PC/104 layout standard",
-    "group": "3U engineering model",
-    "source": "3U-EM-PCB/0.Standard/AnantSAT-PC104/PC104-Board",
-    "link": "",
-    "rev": "Stack standard · full CAD drawing",
-    "notes": [
-      "Board: 95.89 x 90.17 mm, R5.08 corners, 104 pads at 2.54 mm pitch.",
-      "H1 (pins 53-104) carries power; H2 (pins 1-52) carries signals.",
-      "The four mounting holes are deliberately asymmetric."
-    ],
-    "purpose": "Define the mechanical outline and power and signal pin assignments for the stack.",
-    "buildTime": "September",
-    "buildEvidence": "September KiCad backups and commits.",
-    "readme": "readme.md"
-  },
-  {
     "id": "mtq-carrier",
     "title": "Magnetorquer driver and current monitor carrier",
     "group": "Modules",
@@ -206,6 +206,59 @@
     "readme": "readme.md"
   },
   {
+    "id": "solar",
+    "title": "MCU-controlled solar charger",
+    "group": "Modules",
+    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
+    "link": "",
+    "rev": "Review prototype",
+    "notes": [
+      "This module uses an external EPS MCU through [[J7|J7]].",
+      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
+    ],
+    "purpose": "Prototype a four-switch solar charger controlled by an external EPS MCU.",
+    "buildTime": "November",
+    "buildEvidence": "Single dated KiCad backup. Full development window is uncertain.",
+    "readme": "readme.md",
+    "pending": "Prototype review and validation pending."
+  },
+  {
+    "id": "lt8491",
+    "title": "LT8491 evaluation board",
+    "group": "Modules",
+    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
+    "link": "",
+    "rev": "Evaluation",
+    "notes": [
+      "A single-channel MPPT buck-boost charger for a 4S battery.",
+      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
+      "The schematic and placement are available; signal routing is still in progress."
+    ],
+    "purpose": "Evaluate a single-channel MPPT buck-boost charger for a 4S battery.",
+    "buildTime": "October",
+    "buildEvidence": "First and last board commits available. Routing is pending.",
+    "readme": "readme.md",
+    "pending": "Signal routing is pending."
+  },
+  {
+    "id": "wheel",
+    "title": "3U reaction wheel carrier",
+    "group": "Modules",
+    "source": "3U-EM-PCB/6.ReactionWheel/main_ReactionWheel/main_ReactionWheel",
+    "link": "",
+    "rev": "Placement review",
+    "purpose": "Drive four reaction wheel motors and interface with the CubeSat stack over CAN.",
+    "notes": [
+      "Four [[DRV8311H|DRV8311H]] stages drive the reaction wheel motors.",
+      "The five-sheet schematic uses an external NUCLEO-H753ZI for control and four AS5047U daughterboards for shaft angle feedback.",
+      "[[J10|J10]] through [[J13|J13]] are the motor connectors."
+    ],
+    "buildTime": "October",
+    "buildEvidence": "October placement review and KiCad backup.",
+    "readme": "readme.md",
+    "pending": "Schematic and placement are available. Routing is pending."
+  },
+  {
     "id": "rotator",
     "title": "SatNOGS rotator controller",
     "group": "Additional projects",
@@ -226,21 +279,40 @@
     "readme": "readme.md"
   },
   {
-    "id": "battery-1u",
-    "title": "1U battery board",
+    "id": "solar-panel",
+    "title": "3U solar panel board",
     "group": "Additional projects",
-    "source": "Comsat/PCBS/one-U-battery/one-U-battery",
+    "source": "3U-EM-PCB/SolarPanelBoard/main_SolarPanelPCB/main_SolarPanelPCB",
     "link": "",
-    "rev": "1U",
+    "rev": "3U solar panel",
+    "purpose": "Generate power for the 3U CubeSat using a series string of seven solar cells.",
     "notes": [
-      "Holds the 1S6P cell pack with on-board protection circuitry.",
-      "Protection · Over-charge and over-discharge circuit on-board",
-      "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
+      "Seven solar cells are connected in series.",
+      "A Schottky bypass diode sits across each cell.",
+      "A two-pin PicoBlade connector provides the panel output. The panel also includes mounting points for the coarse sun sensor."
     ],
-    "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
-    "buildTime": "July",
-    "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
+    "buildTime": "September",
+    "buildEvidence": "Board-specific KiCad commits from September.",
     "readme": "readme.md"
+  },
+  {
+    "id": "probation",
+    "title": "First PCB · Team Anant probation",
+    "group": "Early boards and studies",
+    "source": "probation/PadamSarda_Kicad_*/anant-prob-temp",
+    "link": "",
+    "rev": "Probation project",
+    "purpose": "Serve as the main PCB of a simple satellite, with power regulation, current monitoring, sensor inputs, and reaction wheel control.",
+    "notes": [
+      "First PCB, built during the month-long Team Anant probation.",
+      "Power regulation and distribution for the 5 V and 3.3 V rails.",
+      "[[STM32F401|STM32F401]] microcontroller with [[INA226|INA226]] rail current monitoring.",
+      "The MCU takes input from sensors and uses [[IR2101|IR2101]] gate drivers for reaction wheel control."
+    ],
+    "buildTime": "March",
+    "buildEvidence": "Saved KiCad files and the submitted March assignment.",
+    "readme": "readme.md",
+    "documentationLabel": "Project documentation"
   },
   {
     "id": "radio",
@@ -264,73 +336,5 @@
     "buildTime": "April",
     "buildEvidence": "KiCad backup cluster through the first GitHub PCB commit in April.",
     "readme": "readme.md"
-  },
-  {
-    "id": "solar",
-    "title": "MCU-controlled solar charger",
-    "group": "Pending",
-    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
-    "link": "",
-    "rev": "Review prototype",
-    "notes": [
-      "This module uses an external EPS MCU through [[J7|J7]].",
-      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
-    ],
-    "purpose": "Prototype a four-switch solar charger controlled by an external EPS MCU.",
-    "buildTime": "November",
-    "buildEvidence": "Single dated KiCad backup. Full development window is uncertain.",
-    "readme": "readme.md",
-    "pending": "Prototype review and validation pending."
-  },
-  {
-    "id": "lt8491",
-    "title": "LT8491 evaluation board",
-    "group": "Pending",
-    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
-    "link": "",
-    "rev": "Evaluation",
-    "notes": [
-      "A single-channel MPPT buck-boost charger for a 4S battery.",
-      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
-      "The schematic and placement are available; signal routing is still in progress."
-    ],
-    "purpose": "Evaluate a single-channel MPPT buck-boost charger for a 4S battery.",
-    "buildTime": "October",
-    "buildEvidence": "First and last board commits available. Routing is pending.",
-    "readme": "readme.md",
-    "pending": "Signal routing is pending."
-  },
-  {
-    "id": "encoder",
-    "title": "Shaft encoder",
-    "group": "Pending",
-    "source": "3U-EM-PCB/6.ReactionWheel/module_AS5047U/module_AS5047U",
-    "link": "",
-    "rev": "Placement review",
-    "notes": [
-      "Each encoder board is 22 x 22 mm, built four times.",
-      "[[U1|AS5047U]] encoder daughterboards",
-      "Separate shaft encoder schematic and placed PCB, four copies required."
-    ],
-    "purpose": "Measure shaft angle for the reaction wheel using an AS5047U encoder.",
-    "buildTime": "October",
-    "buildEvidence": "Dated placement review in the reaction-wheel README. Full development window is uncertain.",
-    "readme": "readme.md",
-    "pending": "Placement review only. Routing is pending."
-  },
-  {
-    "id": "reaction-local",
-    "title": "3U reaction wheel · local",
-    "group": "Pending",
-    "source": "Padam_PCBs/reaction_wheel 3U/reaction_wheel 3U",
-    "link": "",
-    "rev": "Local design",
-    "notes": [],
-    "purpose": "Explore a controller schematic for a 3U reaction wheel.",
-    "buildTime": "June–July",
-    "buildEvidence": "Related Notion schematic date and the saved local KiCad file date. Approximate, with no commit history for this copy.",
-    "readme": "readme.md",
-    "pending": "Schematic study. PCB placement and routing are pending.",
-    "documentationLabel": "Project documentation"
   }
 ]

@@ -34,6 +34,20 @@ def mm(value):
 
 def pcb_source(spec):
     source = WORKSPACE / spec["source"]
+    if spec["id"] == "probation":
+        matches = list(WORKSPACE.glob(spec["source"] + ".kicad_pcb"))
+        if len(matches) != 1:
+            raise ValueError("Expected one Team Anant probation PCB")
+        staging = PROJECT / ".sources" / "probation"
+        staging.mkdir(parents=True, exist_ok=True)
+        files = []
+        for original in (matches[0], matches[0].with_suffix(".kicad_sch")):
+            copy = staging / original.name
+            text = original.read_text(encoding="utf-8")
+            text = re.sub(r"\\nID : \d{4}[A-Z]{4}\d{4}[A-Z]", "", text)
+            copy.write_text(text, encoding="utf-8")
+            files.append(copy)
+        return tuple(files)
     if spec["id"] != "bq24650":
         return source.with_suffix(".kicad_pcb"), source.with_suffix(".kicad_sch")
     folder = WORKSPACE / "Padam_PCBs" / "BQ24650_1U_SolarChargerBoard"

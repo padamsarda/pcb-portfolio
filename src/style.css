@@ -36,8 +36,11 @@ dialog{border:1px solid var(--line);width:min(670px,calc(100% - 32px));max-heigh
 .readme-content img{max-width:100%;height:auto}
 #board-catalogue{margin:30px 0 0;padding:24px 0;border-top:1px solid var(--line)}
 #catalogue-title{margin:0;font-size:32px;letter-spacing:-.05em}
-#catalogue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:0 24px}
+#catalogue-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 24px;align-items:start}
 #catalogue-list .index-group a{min-height:44px;align-items:center}
+.archive-subheading{margin:16px 0 4px;color:var(--muted);font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:1180px){#catalogue-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#catalogue-list{grid-template-columns:1fr}}
 @media(max-width:790px){
   .viewer-tag{display:none}
   .viewer-top{padding:0 8px}
