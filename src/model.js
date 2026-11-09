@@ -78,7 +78,24 @@ export function mountModel(container, url, missing) {
   };
   frame = requestAnimationFrame(draw);
 
-  new GLTFLoader().load(url, ({scene: model}) => {
+  const loader = new GLTFLoader();
+  loader.register(parser => ({
+    name: 'OpaqueKiCadSubstrate',
+    beforeRoot() {
+      // KiCad exports the laminate with 98% opacity. Make it write depth
+      // before the transparent solder mask and silkscreen are drawn.
+      const laminate = [.42, .45, .29, .98];
+      for (const material of parser.json.materials ?? []) {
+        const color = material.pbrMetallicRoughness?.baseColorFactor;
+        if (material.alphaMode === 'BLEND' && color?.length === laminate.length &&
+            color.every((channel, i) => Math.abs(channel - laminate[i]) < .001)) {
+          material.alphaMode = 'OPAQUE';
+          color[3] = 1;
+        }
+      }
+    },
+  }));
+  loader.load(url, ({scene: model}) => {
     if (disposed) return release(model);
     const wrapper = new THREE.Group();
     wrapper.add(model);
