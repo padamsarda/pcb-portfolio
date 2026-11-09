@@ -11,6 +11,7 @@ import zipfile
 
 import pcbnew as pcb
 from batch_board_model import batch_board_glb
+from batch_schematic_svg import batch_schematic_svg
 
 PROJECT = Path(__file__).resolve().parents[1]
 WORKSPACE = PROJECT.parent
@@ -216,7 +217,7 @@ def export_board(spec, skip_models):
             files = sorted(Path(scratch).glob("*.svg"), key=lambda p: (p.stem != schematic.stem, p.name))
             for i, sheet in enumerate(files):
                 name = f"sheet-{i+1}.svg"
-                (folder / name).write_bytes(sheet.read_bytes())
+                (folder / name).write_bytes(batch_schematic_svg(sheet.read_bytes()))
                 sheets.append(dict(file=name, title="Main sheet" if i == 0 else sheet.stem.removeprefix(schematic.stem + "-")))
     details["sheets"] = sheets
     print(f"{spec['id']}: {len(details['parts'])} footprints, {len(sheets)} sheets, 3D {bool(details['model'])}", flush=True)

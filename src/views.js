@@ -22,18 +22,37 @@ export function mountSchematic(container, sheets, asset, status) {
   let x = 0;
   let y = 0;
   let drag;
+  let frame = 0;
+  let zoomTimer;
+  let paintedScale = 1;
+  let reported;
+
   function render() {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      image.style.transform = `translate(${x}px, ${y}px) scale(${scale / paintedScale})`;
+      const percent = Math.round(scale / fitScale * 100) + '%';
+      if (percent !== reported) {
+        reported = percent;
+        status(percent);
+      }
+    });
+  }
+
+  function paintAtScale() {
+    clearTimeout(zoomTimer);
+    paintedScale = scale;
     image.style.width = image.naturalWidth * scale + 'px';
-    image.style.left = x + 'px';
-    image.style.top = y + 'px';
-    status(Math.round(scale / fitScale * 100) + '%');
+    image.style.willChange = drag ? 'transform' : '';
+    render();
   }
   function fit() {
     if (!image.naturalWidth) return;
     scale = fitScale = .96 * Math.min(window.clientWidth / image.naturalWidth, window.clientHeight / image.naturalHeight);
     x = (window.clientWidth - image.naturalWidth * scale) / 2;
     y = (window.clientHeight - image.naturalHeight * scale) / 2;
-    render();
+    paintAtScale();
   }
   function zoom(factor, px = window.clientWidth / 2, py = window.clientHeight / 2) {
     if (!image.naturalWidth) return;
@@ -41,12 +60,16 @@ export function mountSchematic(container, sheets, asset, status) {
     x = px - (px - x) * next / scale;
     y = py - (py - y) * next / scale;
     scale = next;
+    image.style.willChange = 'transform';
+    clearTimeout(zoomTimer);
+    zoomTimer = setTimeout(paintAtScale, 160);
     render();
   }
   function loadSheet() {
     const sheet = sheets[Number(select.value)];
+    clearTimeout(zoomTimer);
     image.alt = 'Schematic · ' + sheet.title;
-    image.src = asset(sheet.file);
+    image.src = asset(sheet.file) + '?batched=1';
   }
   select.onchange = loadSheet;
   image.onload = fit;
@@ -59,6 +82,7 @@ export function mountSchematic(container, sheets, asset, status) {
   window.onpointerdown = event => {
     if (event.button !== 0 || !event.isPrimary) return;
     window.setPointerCapture(event.pointerId);
+    image.style.willChange = 'transform';
     drag = {x: event.clientX, y: event.clientY, fromX: x, fromY: y};
   };
   window.onpointermove = event => {
@@ -67,11 +91,20 @@ export function mountSchematic(container, sheets, asset, status) {
     y = drag.fromY + event.clientY - drag.y;
     render();
   };
-  window.onlostpointercapture = () => { drag = null; };
+  window.onlostpointercapture = () => {
+    drag = null;
+    if (scale === paintedScale) image.style.willChange = '';
+  };
   const observer = new ResizeObserver(fit);
   observer.observe(window);
   loadSheet();
-  return () => { observer.disconnect(); image.onload = null; image.onerror = null; };
+  return () => {
+    observer.disconnect();
+    cancelAnimationFrame(frame);
+    clearTimeout(zoomTimer);
+    image.onload = null;
+    image.onerror = null;
+  };
 }
 
 export function mountBOM(container, parts, partButton) {
