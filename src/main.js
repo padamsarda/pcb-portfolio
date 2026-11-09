@@ -5,7 +5,7 @@ import { mountSchematic, mountBOM } from './views.js';
 const project = document.querySelector('#project');
 const index = document.querySelector('#index');
 const search = document.querySelector('#board-search');
-const featured = ['adcs', 'obc', 'battery', 'feather', 'rail', 'buck'];
+const featured = ['adcs', 'wheel', 'obc', 'battery', 'solar', 'mtq-driver', 'rail'];
 const root = import.meta.env.BASE_URL + 'boards/';
 const views = [['pcb', 'PCB'], ['schematic', 'Schematic'], ['model', '3D'], ['bom', 'BOM']];
 let archive = [];
@@ -59,18 +59,27 @@ function renderNav() {
       node('i', {}, String(i + 1).padStart(2, '0')), item.title);
   }));
   renderIndex();
+  renderBoardList(document.querySelector('#catalogue-list'), archive, () => {
+    project.scrollIntoView({block: 'start', behavior: scrollBehavior()});
+  });
 }
 
 function renderIndex() {
-  const needle = search.value.toLowerCase().trim();
-  const groups = Map.groupBy(archive.filter(b =>
-    [b.title, b.group, b.rev].some(text => text.toLowerCase().includes(needle))), b => b.group);
-  const list = document.querySelector('#index-list');
+  const terms = search.value.toLowerCase().trim().split(/\s+/);
+  const matches = archive.filter(b => {
+    const haystack = [b.id, b.title, b.group, b.rev, ...(b.aliases || [])].join(' ').toLowerCase();
+    return terms.every(term => haystack.includes(term));
+  });
+  renderBoardList(document.querySelector('#index-list'), matches, () => index.close());
+}
+
+function renderBoardList(list, boards, onOpen) {
+  const groups = Map.groupBy(boards, b => b.group);
   list.replaceChildren(...Array.from(groups, ([group, items]) => node('section', {class: 'index-group'},
     node('h3', {}, group), ...items.map(item => {
       const link = node('a', {href: '#' + item.id, 'aria-current': current?.id === item.id ? 'page' : 'false'},
         item.title, node('small', {}, item.size.length ? item.size.map(n => n.toFixed(1)).join(' × ') + ' mm' : item.rev));
-      link.onclick = () => index.close();
+      link.onclick = onOpen;
       return link;
     }))));
   if (!groups.size) list.append(node('p', {class: 'empty-notes'}, 'No matching boards.'));
@@ -241,6 +250,7 @@ try {
   const response = await fetch(root + 'index.json');
   if (!response.ok) throw new Error('Archive unavailable');
   archive = await response.json();
+  document.querySelector('#board-catalogue').hidden = false;
   addEventListener('hashchange', showBoard);
   showBoard();
 } catch {

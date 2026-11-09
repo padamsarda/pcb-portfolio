@@ -17,6 +17,10 @@ dialog{border:1px solid var(--line);width:min(670px,calc(100% - 32px));max-heigh
 
 .layer-title{cursor:pointer}
 .jump-notes{display:none}
+#board-catalogue{margin:30px 0 0;padding:24px 0;border-top:1px solid var(--line)}
+#catalogue-title{margin:0;font-size:32px;letter-spacing:-.05em}
+#catalogue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:0 24px}
+#catalogue-list .index-group a{min-height:44px;align-items:center}
 @media(max-width:790px){
   .viewer-tag{display:none}
   .viewer-top{padding:0 8px}

@@ -18,6 +18,18 @@
     ]
   },
   {
+    "id": "wheel",
+    "title": "Reaction wheel carrier",
+    "group": "3U engineering model",
+    "source": "3U-EM-PCB/6.ReactionWheel/main_ReactionWheel/main_ReactionWheel",
+    "link": "",
+    "rev": "Placement review",
+    "date": "29 Oct 2026",
+    "notes": [
+      "The schematic is rebuilt for four Readytosky MT2204 2300KV CW motors, an external NUCLEO-H753ZI, four DRV8311H stages, four AS5047U encoder daughterboards and CAN_A to PC/104."
+    ]
+  },
+  {
     "id": "obc",
     "title": "OBC · updated",
     "group": "3U engineering model",
@@ -50,8 +62,69 @@
     ]
   },
   {
+    "id": "pc104",
+    "title": "PC/104 layout standard",
+    "group": "3U engineering model",
+    "source": "3U-EM-PCB/0.Standard/AnantSAT-PC104/PC104-Board",
+    "link": "",
+    "rev": "Stack standard · full CAD drawing",
+    "date": "",
+    "notes": [
+      "Board: 95.89 x 90.17 mm, R5.08 corners, 104 pads at 2.54 mm pitch.",
+      "H1 (pins 53-104) carries power; H2 (pins 1-52) carries signals.",
+      "The four mounting holes are deliberately asymmetric."
+    ]
+  },
+  {
+    "id": "solar",
+    "title": "MCU-controlled solar charger",
+    "group": "Modules",
+    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
+    "link": "",
+    "rev": "Review prototype",
+    "date": "",
+    "notes": [
+      "This module uses an external EPS MCU through [[J7|J7]].",
+      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
+    ]
+  },
+  {
+    "id": "mtq-carrier",
+    "title": "Magnetorquer driver and current monitor carrier",
+    "group": "Modules",
+    "source": "3U-EM-PCB/DevelopmentBoards/carrier_MTQ/carrier_MTQ",
+    "link": "",
+    "rev": "Bench carrier",
+    "date": "4 Nov 2026",
+    "notes": [
+      "Module bodies may overhang; electrical pads stay inside the carrier.",
+      "[[U1|U1]] · Dual driver: M1 X, M2 Y",
+      "[[U2|U2]] · Dual driver: M1 Z, M2 spare",
+      "[[U3|U3]] / [[U4|U4]] / [[U5|U5]] · INA226 X / Y / Z"
+    ],
+    "aliases": [
+      "MTQ driver",
+      "Magnetorquer test carrier",
+      "magnet walker driver"
+    ]
+  },
+  {
+    "id": "lt8491",
+    "title": "LT8491 evaluation board",
+    "group": "Modules",
+    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
+    "link": "",
+    "rev": "Evaluation",
+    "date": "",
+    "notes": [
+      "A single-channel MPPT buck-boost charger for a 4S battery.",
+      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
+      "The schematic and placement are available; signal routing is still in progress."
+    ]
+  },
+  {
     "id": "rail",
-    "title": "Rail controller",
+    "title": "Rail controller (TPS2596xx)",
     "group": "Modules",
     "source": "3U-EM-PCB/DevelopmentBoards/module_railcontroller/module_TPS2596xx",
     "link": "",
@@ -92,45 +165,22 @@
     ]
   },
   {
-    "id": "solar",
-    "title": "MCU-controlled solar charger",
-    "group": "Modules",
-    "source": "3U-EM-PCB/DevelopmentBoards/dev_SolarCharger/dev_SolarCharger",
-    "link": "",
-    "rev": "Review prototype",
+    "id": "mtq-driver",
+    "title": "Magnetorquer test driver",
+    "group": "Personal boards",
+    "source": "Padam_PCBs/MT_test_driver/MT_test_driver",
+    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
+    "rev": "Test board",
     "date": "",
     "notes": [
-      "This module uses an external EPS MCU through [[J7|J7]].",
-      "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
-    ]
-  },
-  {
-    "id": "lt8491",
-    "title": "LT8491 evaluation board",
-    "group": "Modules",
-    "source": "3U-EM-PCB/DevelopmentBoards/eval_LT8491/eval_LT8491",
-    "link": "",
-    "rev": "Evaluation",
-    "date": "",
-    "notes": [
-      "A single-channel MPPT buck-boost charger for a 4S battery.",
-      "It accepts two solar-panel inputs, with ideal diodes on the input and output.",
-      "The schematic and placement are available; signal routing is still in progress."
-    ]
-  },
-  {
-    "id": "mtq-carrier",
-    "title": "Magnetorquer test carrier",
-    "group": "Modules",
-    "source": "3U-EM-PCB/DevelopmentBoards/carrier_MTQ/carrier_MTQ",
-    "link": "",
-    "rev": "Bench carrier",
-    "date": "4 Nov 2026",
-    "notes": [
-      "Module bodies may overhang; electrical pads stay inside the carrier.",
-      "[[U1|U1]] · Dual driver: M1 X, M2 Y",
-      "[[U2|U2]] · Dual driver: M1 Z, M2 spare",
-      "[[U3|U3]] / [[U4|U4]] / [[U5|U5]] · INA226 X / Y / Z"
+      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
+      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
+      "[[U3|INA219AID]] · High-side current and power monitor",
+      "[[U6|TJA1051T/3]] · CAN transceiver"
+    ],
+    "aliases": [
+      "MTQ test driver",
+      "magnet walker test driver"
     ]
   },
   {
@@ -149,21 +199,6 @@
     ]
   },
   {
-    "id": "mtq-driver",
-    "title": "Magnetorquer test driver",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/MT_test_driver/MT_test_driver",
-    "link": "https://github.com/padamsarda/MT_test_driver-PCB",
-    "rev": "Test board",
-    "date": "",
-    "notes": [
-      "A 2 layer test board for characterizing magnetorquer coils under different operating conditions like voltage, current & temperature.",
-      "The coils are driven by a [[U1|DRV8871]] motor driver controlled by an [[U4|STM32F4]] mcu.",
-      "[[U3|INA219AID]] · High-side current and power monitor",
-      "[[U6|TJA1051T/3]] · CAN transceiver"
-    ]
-  },
-  {
     "id": "bq24650",
     "title": "BQ24650 solar charger",
     "group": "Personal boards",
@@ -175,71 +210,28 @@
       "A dev/eval board for the [[U1|TI BQ24650]] standalone solar battery charger IC.",
       "[[RV1|Potentiometer]] · Battery regulation voltage adjustment",
       "[[RV2|Potentiometer]] · MPPT voltage adjustment"
+    ],
+    "aliases": [
+      "Padam PCBs solar charger",
+      "1U solar charger"
     ]
   },
   {
-    "id": "radio",
-    "title": "Arduino transceiver shield",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/nrf-uno-sheild/nrf-uno-sheild",
-    "link": "https://github.com/padamsarda/Arduino-TTC-shield",
-    "rev": "Arduino Uno",
+    "id": "rotator",
+    "title": "SatNOGS rotator controller",
+    "group": "Additional projects",
+    "source": "satnogs-rotator-controller/satnogs-rotator-pcb",
+    "link": "",
+    "rev": "Ground station",
     "date": "",
     "notes": [
-      "This Arduino shield was made for testing and learning TTC systems.",
-      "It combines both the [[u1|nRF24L01]] and [[loraRA02|LoRa RA-02]] modules on a single board, making it easy to switch between short- and long-range wireless communication during development.",
-      "The board also includes an [[INA219|INA219]] for power tracking, understanding the relation between Link-Budget and Power-Budget."
+      "A custom hardware implementation of a SatNOGS-style dual-axis rotator controller, designed to control Azimuth (AZ) and Elevation (EL) stepper motors and interface with a SatNOGS/Raspberry Pi system over RS-485.",
+      "The controller is built around an [[A1|Arduino Nano (ATmega328P)]]",
+      "Dual-axis stepper motor control",
+      "[[U1|RS-485 communication]] with a Raspberry Pi / SatNOGS client",
+      "[[IC1|I²C multiplexing]] for two same-address encoder devices",
+      "Azimuth and Elevation [[P5|endstop inputs]]"
     ]
-  },
-  {
-    "id": "reaction-local",
-    "title": "3U reaction wheel · local",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/reaction_wheel 3U/reaction_wheel 3U",
-    "link": "",
-    "rev": "Local design",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "obc-local",
-    "title": "OBC · local snapshot",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/main_OBC",
-    "link": "",
-    "rev": "Local design",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "lora-footprint",
-    "title": "LoRa footprint study",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/nrf-uno-sheild/lora_footprint/lora_footprint",
-    "link": "",
-    "rev": "Footprint study",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "template",
-    "title": "KiCad board template",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/template_padam/template_padam",
-    "link": "",
-    "rev": "Template",
-    "date": "",
-    "notes": []
-  },
-  {
-    "id": "random",
-    "title": "Random · layout study",
-    "group": "Personal boards",
-    "source": "Padam_PCBs/random/random",
-    "link": "",
-    "rev": "Layout study",
-    "date": "",
-    "notes": []
   },
   {
     "id": "cansat",
@@ -271,46 +263,73 @@
     ]
   },
   {
-    "id": "rotator",
-    "title": "SatNOGS rotator controller",
-    "group": "Additional projects",
-    "source": "satnogs-rotator-controller/satnogs-rotator-pcb",
+    "id": "obc-local",
+    "title": "OBC · local snapshot",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/main_OBC",
     "link": "",
-    "rev": "Ground station",
+    "rev": "Local design",
+    "date": "",
+    "notes": []
+  },
+  {
+    "id": "radio",
+    "title": "NRF Uno shield",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/nrf-uno-sheild/nrf-uno-sheild",
+    "link": "https://github.com/padamsarda/Arduino-TTC-shield",
+    "rev": "Arduino Uno",
     "date": "",
     "notes": [
-      "A custom hardware implementation of a SatNOGS-style dual-axis rotator controller, designed to control Azimuth (AZ) and Elevation (EL) stepper motors and interface with a SatNOGS/Raspberry Pi system over RS-485.",
-      "The controller is built around an [[A1|Arduino Nano (ATmega328P)]]",
-      "Dual-axis stepper motor control",
-      "[[U1|RS-485 communication]] with a Raspberry Pi / SatNOGS client",
-      "[[IC1|I²C multiplexing]] for two same-address encoder devices",
-      "Azimuth and Elevation [[P5|endstop inputs]]"
+      "This Arduino shield was made for testing and learning TTC systems.",
+      "It combines both the [[u1|nRF24L01]] and [[loraRA02|LoRa RA-02]] modules on a single board, making it easy to switch between short- and long-range wireless communication during development.",
+      "The board also includes an [[INA219|INA219]] for power tracking, understanding the relation between Link-Budget and Power-Budget."
+    ],
+    "aliases": [
+      "Arduino transceiver shield",
+      "Arduino TTC shield",
+      "nRF24L01",
+      "LoRa RA-02"
     ]
   },
   {
-    "id": "wheel",
-    "title": "Reaction wheel carrier",
-    "group": "3U engineering model",
-    "source": "3U-EM-PCB/6.ReactionWheel/main_ReactionWheel/main_ReactionWheel",
+    "id": "reaction-local",
+    "title": "3U reaction wheel · local",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/reaction_wheel 3U/reaction_wheel 3U",
     "link": "",
-    "rev": "Placement review",
-    "date": "29 Oct 2026",
-    "notes": [
-      "The schematic is rebuilt for four Readytosky MT2204 2300KV CW motors, an external NUCLEO-H753ZI, four DRV8311H stages, four AS5047U encoder daughterboards and CAN_A to PC/104."
-    ]
+    "rev": "Local design",
+    "date": "",
+    "notes": []
   },
   {
-    "id": "pc104",
-    "title": "PC/104 layout standard",
-    "group": "3U engineering model",
-    "source": "3U-EM-PCB/0.Standard/AnantSAT-PC104/PC104-Board",
+    "id": "lora-footprint",
+    "title": "LoRa footprint study",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/nrf-uno-sheild/lora_footprint/lora_footprint",
     "link": "",
-    "rev": "Stack standard · full CAD drawing",
+    "rev": "Footprint study",
     "date": "",
-    "notes": [
-      "Board: 95.89 x 90.17 mm, R5.08 corners, 104 pads at 2.54 mm pitch.",
-      "H1 (pins 53-104) carries power; H2 (pins 1-52) carries signals.",
-      "The four mounting holes are deliberately asymmetric."
-    ]
+    "notes": []
+  },
+  {
+    "id": "random",
+    "title": "Random · layout study",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/random/random",
+    "link": "",
+    "rev": "Layout study",
+    "date": "",
+    "notes": []
+  },
+  {
+    "id": "template",
+    "title": "KiCad board template",
+    "group": "Early boards and studies",
+    "source": "Padam_PCBs/template_padam/template_padam",
+    "link": "",
+    "rev": "Template",
+    "date": "",
+    "notes": []
   }
 ]
