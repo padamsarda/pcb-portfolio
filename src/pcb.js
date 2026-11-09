@@ -21,7 +21,13 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
     transform: 'translate(' + (board.outlineOffset || [0, 0]).join(' ') + ')'}));
   const overlay = svgNode('g');
   const heading = node('div', {class: 'overlay-info'});
-  const layers = node('aside', {class: 'layers', 'aria-label': 'PCB layers'}, node('div', {class: 'layer-title'}, 'Layer visibility'));
+  const compact = matchMedia('(max-width: 790px)');
+  const drawer = node('details', {class: 'layers'});
+  const layers = node('div', {class: 'layer-panel', 'aria-label': 'PCB layers'});
+  drawer.append(node('summary', {class: 'layer-title'}, 'PCB layers'), layers);
+  const syncDrawer = () => { drawer.open = !compact.matches; };
+  compact.addEventListener('change', syncDrawer);
+  syncDrawer();
   const actions = node('div', {class: 'layer-actions'});
   const front = node('button', {type: 'button', 'aria-pressed': true}, 'Front');
   const back = node('button', {type: 'button', 'aria-pressed': false}, 'Back');
@@ -55,7 +61,7 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
     button('−', 'Zoom out', () => zoom(1.25)),
     button('+', 'Zoom in', () => zoom(.8)),
     button('Fit', 'Fit board', () => move({x: width / 2, y: height / 2, w: fitWidth}))));
-  container.append(stage, layers);
+  container.append(stage, drawer);
 
   const checks = new Map(plots.map(name => {
     const input = node('input', {type: 'checkbox'});
@@ -214,5 +220,9 @@ export function mountPCB(container, board, asset, {onSelect, onStatus}) {
   observer.observe(stage);
   setSide(false);
   resize();
-  return {focus, dispose() { observer.disconnect(); cancelAnimationFrame(frame); }};
+  return {focus, dispose() {
+    compact.removeEventListener('change', syncDrawer);
+    observer.disconnect();
+    cancelAnimationFrame(frame);
+  }};
 }

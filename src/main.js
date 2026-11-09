@@ -16,6 +16,8 @@ let dispose;
 let activePart;
 let boardRequest = 0;
 let viewRequest = 0;
+const compact = matchMedia('(max-width: 790px)');
+const scrollBehavior = () => matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
 
 export function node(tag, props = {}, ...children) {
   const element = document.createElement(tag);
@@ -40,12 +42,11 @@ function locate(part, fromNotes = false) {
   activePart = part;
   if (!view || fromNotes && view.name !== 'pcb') {
     openView('pcb');
-    if (matchMedia('(max-width: 790px)').matches) {
-      document.querySelector('.viewer').scrollIntoView({block: 'nearest',
-        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
-    }
   }
   view?.focus?.(part);
+  if (part && fromNotes && compact.matches) {
+    document.querySelector('.viewer').scrollIntoView({block: 'start', behavior: scrollBehavior()});
+  }
   document.querySelectorAll('[data-ref]').forEach(el =>
     el.setAttribute('aria-pressed', String(el.dataset.ref === part?.ref)));
 }
@@ -136,12 +137,15 @@ function renderProject() {
     };
     tabs.append(tab);
   });
+  const notes = renderNotes();
+  const jumpToNotes = node('button', {class: 'jump-notes', type: 'button'}, 'Notes ↓');
+  jumpToNotes.onclick = () => notes.scrollIntoView({block: 'start', behavior: scrollBehavior()});
   const viewer = node('section', {class: 'viewer', 'aria-label': 'Interactive board viewer'},
     node('div', {class: 'viewer-top'}, tabs, node('span', {class: 'viewer-tag'},
-      node('i', {class: 'status-dot'}), 'KICAD / ' + current.id.toUpperCase())),
+      node('i', {class: 'status-dot'}), 'KICAD / ' + current.id.toUpperCase()), jumpToNotes),
     node('div', {id: 'view', class: 'view', role: 'tabpanel', tabindex: 0}),
     node('div', {class: 'view-status'}, node('span', {id: 'view-hint'}), node('strong', {id: 'selection', 'aria-live': 'polite'})));
-  project.replaceChildren(hero, node('div', {class: 'workbench'}, viewer, renderNotes()));
+  project.replaceChildren(hero, node('div', {class: 'workbench'}, viewer, notes));
 }
 
 async function openView(name) {

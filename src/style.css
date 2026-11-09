@@ -14,3 +14,30 @@ dialog{border:1px solid var(--line);width:min(670px,calc(100% - 32px));max-heigh
 @media(max-width:1120px){.masthead,main,.footer{width:calc(100% - 48px)}.hero{grid-template-columns:1fr;gap:18px}.specs div:first-child{border:0;padding-left:0}.hero h1{font-size:clamp(44px,6.5vw,76px)}}
 @media(max-width:790px){.workbench{grid-template-columns:1fr}.viewer{min-height:475px}.view,.pcb-stage{min-height:390px}.notes{padding:20px}.layers{width:130px}.sheet-window{height:390px}}
 @media(max-width:500px){.masthead,main,.footer{width:calc(100% - 26px)}.masthead{padding:15px 0}.masthead nav{gap:12px}.masthead nav a,.masthead nav button{font-size:11px}.hero{padding-top:27px}.hero h1{font-size:44px}.specs{gap:9px 0}.specs div{padding:3px 9px}.specs dd{font-size:10px}.viewer-tag{display:none}.viewer-top{padding:0 4px}.tab{padding:0 10px}.viewer{min-height:400px}.view,.pcb-stage{min-height:325px}.layers{width:96px;padding:8px 5px}.layer-row{font-size:9px;gap:4px}.layer-actions button{font-size:9px;padding:4px 2px}.layer-title{font-size:9px}.view-status{font-size:9px}.sheet-window{height:325px}.footer{letter-spacing:0}}
+
+.layer-title{cursor:pointer}
+.jump-notes{display:none}
+@media(max-width:790px){
+  .viewer-tag{display:none}
+  .viewer-top{padding:0 8px}
+  .jump-notes{display:block;flex:none;min-height:44px;border:0;background:none;color:#dce7ca;font:11px var(--mono);padding:0 5px}
+  .view{flex-direction:column}
+  .pcb-stage{flex:none;width:100%;height:clamp(305px,49svh,440px);min-height:0}
+  .layers{width:100%;max-height:none;border-left:0;border-top:1px solid #3a4246;padding:0 12px}
+  .layer-title{min-height:44px;padding:14px 0;font-size:11px}
+  .layer-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;padding-bottom:12px}
+  .layer-actions{grid-column:1/-1;padding-bottom:4px}
+  .layer-actions button,.canvas-buttons button,.sheet-tools button{min-width:44px;min-height:44px;font-size:12px}
+  .layer-row{min-height:44px;font-size:12px;gap:8px}
+  .layer-row input{width:16px;height:16px}
+  .view-status{min-height:38px}
+  .model{flex:1;min-height:325px}
+  .bom input{min-height:44px}
+  .notes li{font-size:15px;line-height:1.65}
+  .pill{min-height:44px}
+}
+@media(max-width:360px){
+  .tabs{gap:0}
+  .tab{padding:0 7px}
+  .jump-notes{font-size:10px}
+}
