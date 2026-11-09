@@ -1,11 +1,11 @@
-"""Batch the OBC GLB by mesh, material, and draw mode without changing geometry."""
+"""Batch KiCad GLBs by mesh, material, and draw mode without changing geometry."""
 import json
 import struct
 from array import array
 from collections import defaultdict
 
 
-def batch_obc_glb(data):
+def batch_board_glb(data):
     json_size = struct.unpack_from("<I", data, 12)[0]
     doc = json.loads(data[20:20 + json_size])
     source = memoryview(data)[28 + json_size:]
@@ -14,6 +14,7 @@ def batch_obc_glb(data):
     binary = bytearray()
     accessors = []
     views = []
+    shared_accessors = {}
 
     def read(index):
         accessor = old_accessors[index]
@@ -25,12 +26,18 @@ def batch_obc_glb(data):
         return source[start:start + accessor["count"] * size]
 
     def write(raw, kind, component, count, **bounds):
+        key = (kind, component, count, tuple(bounds.get("min", ())),
+               tuple(bounds.get("max", ())), bytes(raw))
+        if key in shared_accessors:
+            return shared_accessors[key]
         binary.extend(b"\0" * (-len(binary) % 4))
         views.append(dict(buffer=0, byteOffset=len(binary), byteLength=len(raw)))
         binary.extend(raw)
         accessors.append(dict(bufferView=len(views) - 1, type=kind, componentType=component,
                               count=count, **bounds))
-        return len(accessors) - 1
+        index = len(accessors) - 1
+        shared_accessors[key] = index
+        return index
 
     for mesh in doc["meshes"]:
         batches = defaultdict(list)

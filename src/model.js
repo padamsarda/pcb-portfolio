@@ -58,7 +58,7 @@ function release(scene) {
   });
 }
 
-export function mountModel(container, url, missing, renderOnChange = false) {
+export function mountModel(container, url, missing) {
   const renderer = new THREE.WebGLRenderer({antialias: true, alpha: false});
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const stage = node('div', {class: 'model'});
@@ -128,9 +128,9 @@ export function mountModel(container, url, missing, renderOnChange = false) {
       }
     }
     renderer.render(scene, camera);
-    if (!renderOnChange || moved) requestRender();
+    if (moved) requestRender();
   }
-  if (renderOnChange) controls.addEventListener('change', requestRender);
+  controls.addEventListener('change', requestRender);
   requestRender();
 
   const loader = new GLTFLoader();
