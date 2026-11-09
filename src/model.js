@@ -136,6 +136,22 @@ export function mountModel(container, url, missing) {
     model.traverse(object => {
       if (Number.isFinite(object.userData.silkscreenHeight)) silkscreens.push(object);
     });
+    for (const layer of silkscreens) {
+      layer.traverse(mesh => {
+        if (!mesh.isMesh) return;
+        for (const material of [mesh.material].flat()) {
+          // White ink stays white on the underside. Bias its depth toward
+          // the camera so it does not compete with the nearby solder mask.
+          material.color.set(0x000000);
+          material.emissive.set(0xffffff);
+          material.emissiveIntensity = 1;
+          material.toneMapped = false;
+          material.polygonOffset = true;
+          material.polygonOffsetFactor = -1;
+          material.polygonOffsetUnits = -4;
+        }
+      });
+    }
     const wrapper = new THREE.Group();
     wrapper.add(model);
     const nativeSize = new THREE.Box3().setFromObject(wrapper).getSize(new THREE.Vector3());
@@ -145,7 +161,7 @@ export function mountModel(container, url, missing) {
     radius = Math.max(.0001, bounds.getBoundingSphere(new THREE.Sphere()).radius);
     wrapper.position.sub(center);
     scene.add(wrapper);
-    camera.near = radius / 1000;
+    camera.near = radius / 100;
     camera.far = radius * 80;
     camera.updateProjectionMatrix();
     controls.minDistance = radius * .15;
