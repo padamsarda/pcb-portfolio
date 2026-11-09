@@ -259,26 +259,6 @@
     "pending": "Schematic and placement are available. Routing is pending."
   },
   {
-    "id": "rotator",
-    "title": "SatNOGS rotator controller",
-    "group": "Additional projects",
-    "source": "satnogs-rotator-controller/satnogs-rotator-pcb",
-    "link": "",
-    "rev": "Ground station",
-    "notes": [
-      "A custom hardware implementation of a SatNOGS-style dual-axis rotator controller, designed to control Azimuth (AZ) and Elevation (EL) stepper motors and interface with a SatNOGS/Raspberry Pi system over RS-485.",
-      "The controller is built around an [[A1|Arduino Nano (ATmega328P)]]",
-      "Dual-axis stepper motor control",
-      "[[U1|RS-485 communication]] with a Raspberry Pi / SatNOGS client",
-      "[[IC1|I²C multiplexing]] for two same-address encoder devices",
-      "Azimuth and Elevation [[P5|endstop inputs]]"
-    ],
-    "purpose": "Drive the azimuth and elevation axes of a SatNOGS ground station rotator over RS-485.",
-    "buildTime": "August",
-    "buildEvidence": "Available August commit cluster. Local October backups show later activity.",
-    "readme": "readme.md"
-  },
-  {
     "id": "solar-panel",
     "title": "3U solar panel board",
     "group": "Additional projects",

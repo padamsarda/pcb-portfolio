@@ -21,7 +21,7 @@ Open the local URL printed by Vite. Use the board index to browse the full archi
 
 ## Board sources
 
-The catalogue uses the local `3U-EM-PCB`, `Padam_PCBs`, `Comsat`, and SatNOGS KiCad designs. The résumé’s PCB list informed the selection. The OBC uses the latest local board files and the original BeagleBone Black and Celeste STEP models. The BQ24650 PCB comes from a local KiCad backup because the checked-out project and its GitHub repository contain the schematic, STEP and fabrication files.
+The catalogue uses KiCad designs from the local `3U-EM-PCB`, `Padam_PCBs`, `Comsat`, and `probation` folders. The résumé’s PCB list informed the selection. The OBC uses the latest local board files and the original BeagleBone Black and Celeste STEP models. The BQ24650 PCB comes from a local KiCad backup because the checked-out project and its GitHub repository contain the schematic, STEP and fabrication files.
 
 Build windows show the months of main development activity based on commits and KiCad backups where available. The evidence note on each board explains what supports its build window. Layout studies can lack a closed outline, assembly BOM or 3D model.
 
