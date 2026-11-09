@@ -3,6 +3,43 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { node } from './main.js';
 
+function prepareBoardLayers(doc) {
+  const roots = doc.scenes.flatMap(scene => scene.nodes);
+  const layerIds = new Set(roots.flatMap(id => doc.nodes[id].children ?? []));
+  const opaqueMaterials = new Map();
+  for (const id of layerIds) {
+    const layer = doc.nodes[id];
+    if (layer.mesh === undefined) continue;
+    const primitives = doc.meshes[layer.mesh].primitives;
+    const first = primitives[0];
+    const ink = doc.materials[first.material]?.pbrMetallicRoughness?.baseColorFactor;
+    // KiCad exports each face's white silkscreen as a separate planar mesh.
+    if (ink && Math.abs(ink[3] - .9) < .001 && ink.slice(0, 3).every(channel => channel === 1)) {
+      const axis = 1; // KiCad GLB exports use Y as the board normal.
+      const height = doc.accessors[first.attributes.POSITION].min[axis];
+      if (primitives.every(primitive => {
+        const position = doc.accessors[primitive.attributes.POSITION];
+        return position.min[axis] === height && position.max[axis] === height;
+      })) layer.extras = {...layer.extras, silkscreenHeight: height};
+    }
+    // Match Stackview: make all PCB layer materials opaque, without
+    // changing materials shared with nested component assemblies.
+    for (const primitive of primitives) {
+      const index = primitive.material;
+      const material = doc.materials[index];
+      const color = material?.pbrMetallicRoughness?.baseColorFactor;
+      if (!material || (material.alphaMode !== 'BLEND' && !(color?.[3] < 1))) continue;
+      if (!opaqueMaterials.has(index)) {
+        opaqueMaterials.set(index, doc.materials.length);
+        doc.materials.push({...material, alphaMode: 'OPAQUE', pbrMetallicRoughness: {
+          ...material.pbrMetallicRoughness, baseColorFactor: [...(color ?? [1, 1, 1]).slice(0, 3), 1],
+        }});
+      }
+      primitive.material = opaqueMaterials.get(index);
+    }
+  }
+}
+
 function release(scene) {
   const disposed = new Set();
   const free = resource => {
@@ -49,6 +86,9 @@ export function mountModel(container, url, missing) {
   let frame = 0;
   let radius = 1;
   let ready = false;
+  let assembly;
+  const silkscreens = [];
+  const localEye = new THREE.Vector3();
 
   function reset(top = false) {
     if (!ready) return;
@@ -73,6 +113,13 @@ export function mountModel(container, url, missing) {
   resize();
   const draw = () => {
     controls.update();
+    if (silkscreens.length) {
+      assembly.worldToLocal(localEye.copy(camera.position));
+      for (const layer of silkscreens) {
+        const height = layer.userData.silkscreenHeight;
+        layer.visible = height > 0 ? localEye.y > height : localEye.y < height;
+      }
+    }
     renderer.render(scene, camera);
     frame = requestAnimationFrame(draw);
   };
@@ -80,23 +127,15 @@ export function mountModel(container, url, missing) {
 
   const loader = new GLTFLoader();
   loader.register(parser => ({
-    name: 'OpaqueKiCadSubstrate',
-    beforeRoot() {
-      // KiCad exports the laminate with 98% opacity. Make it write depth
-      // before the transparent solder mask and silkscreen are drawn.
-      const laminate = [.42, .45, .29, .98];
-      for (const material of parser.json.materials ?? []) {
-        const color = material.pbrMetallicRoughness?.baseColorFactor;
-        if (material.alphaMode === 'BLEND' && color?.length === laminate.length &&
-            color.every((channel, i) => Math.abs(channel - laminate[i]) < .001)) {
-          material.alphaMode = 'OPAQUE';
-          color[3] = 1;
-        }
-      }
-    },
+    name: 'KiCadBoardLayers',
+    beforeRoot: () => prepareBoardLayers(parser.json),
   }));
   loader.load(url, ({scene: model}) => {
     if (disposed) return release(model);
+    assembly = model;
+    model.traverse(object => {
+      if (Number.isFinite(object.userData.silkscreenHeight)) silkscreens.push(object);
+    });
     const wrapper = new THREE.Group();
     wrapper.add(model);
     const nativeSize = new THREE.Box3().setFromObject(wrapper).getSize(new THREE.Vector3());
