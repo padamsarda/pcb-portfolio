@@ -111,7 +111,7 @@ function renderNotes() {
   const overview = node('div', {class: 'board-overview'},
     node('p', {class: 'section-kicker'}, 'Purpose'),
     node('p', {}, current.purpose),
-    node('p', {class: 'section-kicker'}, 'Estimated build window'),
+    node('p', {class: 'section-kicker'}, 'Build window'),
     node('p', {}, current.buildTime),
     node('small', {}, current.buildEvidence));
   if (current.pending) overview.append(node('p', {class: 'pending-note'}, 'Pending · ' + current.pending));

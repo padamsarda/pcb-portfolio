@@ -15,7 +15,7 @@
       "NRST test point [[TP11|TP11]] is beside SWD header [[J6|J6]]."
     ],
     "purpose": "Attitude determination and control for the 3U engineering model.",
-    "buildTime": "9–27 Sep 2026",
+    "buildTime": "September",
     "buildEvidence": "KiCad backups and the main September commit cluster.",
     "readme": "readme.md",
     "size": [
@@ -39,7 +39,7 @@
       "[[U3|CAN]] wiring rechecked from saved pad nets."
     ],
     "purpose": "Host the BeagleBone Black and Celeste GNSS receiver, and connect them to the CubeSat stack.",
-    "buildTime": "11–27 Sep 2026",
+    "buildTime": "September",
     "buildEvidence": "OBC commit cluster through fabrication export. The later CAN work is outside this window.",
     "readme": "readme.md",
     "size": [
@@ -58,6 +58,9 @@
     "rev": "4S2P",
     "notes": [
       "4S2P battery interface using [[BQ76952|BQ76952PFBR]] with direct stack I2C_A.",
+      "[[SW1|SW1]] · Manual pack on/off switch on the battery board.",
+      "The stack can read battery voltage, current and temperature over I²C_A from the [[U1|BQ76952]].",
+      "The stack can manually command charge or discharge cutoff through the [[J9|PC/104 connector]]. Pins 39 and 40 carry BAT_CFETOFF and BAT_DFETOFF.",
       "[[J4|J4]] / [[J8|J8]] · Pack B+ / B-",
       "[[J5|J5]] / [[J6|J6]] / [[J7|J7]] · C3+ / C2+ / C1+",
       "[[J12|J12]] · Pack output: 1-4 PACK+, 5-8 PGND",
@@ -66,8 +69,8 @@
       "[[SW2|SW2]] · BQ wake",
       "EPS supplies the I2C pull-ups and must configure the BQ before enabling its FETs."
     ],
-    "purpose": "Connect a 4S2P pack to the CubeSat stack and manage battery protection and monitoring.",
-    "buildTime": "9 Sep–6 Oct 2026",
+    "purpose": "Connect and protect the 4S2P battery pack, with a manual pack switch and controls to monitor the battery and stop charging or discharging from the CubeSat stack.",
+    "buildTime": "September–October",
     "buildEvidence": "KiCad backups and the September to early October commit cluster.",
     "readme": "readme.md",
     "size": [
@@ -95,7 +98,7 @@
       "magnet walker test driver"
     ],
     "purpose": "Drive and characterize magnetorquer coils at different voltages, currents and temperatures.",
-    "buildTime": "12–18 Jun 2026",
+    "buildTime": "June",
     "buildEvidence": "June commit and KiCad backup cluster, before isolated July activity.",
     "readme": "readme.md",
     "size": [
@@ -119,7 +122,7 @@
       "External RTC clock source · [[X1|32.768 kHz Crystal]]"
     ],
     "purpose": "Build a Feather-compatible SAMD21 development board with a hardware watchdog and MCU power cycling.",
-    "buildTime": "6–12 Jul 2026",
+    "buildTime": "July",
     "buildEvidence": "KiCad backups and the main July commit cluster.",
     "readme": "readme.md",
     "size": [
@@ -146,7 +149,7 @@
       "1U solar charger"
     ],
     "purpose": "Evaluate the BQ24650 solar battery charger and its adjustable battery regulation and MPPT voltages.",
-    "buildTime": "23–27 Jun 2026",
+    "buildTime": "June",
     "buildEvidence": "Initial commit and KiCad backup cluster, before scattered later revisions.",
     "readme": "readme.md",
     "size": [
@@ -169,7 +172,7 @@
       "The four mounting holes are deliberately asymmetric."
     ],
     "purpose": "Define the mechanical outline and power and signal pin assignments for the stack.",
-    "buildTime": "5–24 Sep 2026",
+    "buildTime": "September",
     "buildEvidence": "September KiCad backups and commits.",
     "readme": "readme.md",
     "size": [
@@ -198,7 +201,7 @@
       "magnet walker driver"
     ],
     "purpose": "Carry the magnetorquer drivers and current monitors for the three coil axes.",
-    "buildTime": "3–4 Nov 2026",
+    "buildTime": "November",
     "buildEvidence": "KiCad backups followed by the fabrication commit cluster.",
     "readme": "readme.md",
     "size": [
@@ -220,7 +223,7 @@
       "Edge outline approximately 49.53 x 20.32 mm, two layers, 1.6 mm thickness."
     ],
     "purpose": "Switch and protect a power rail while measuring its current.",
-    "buildTime": "29 Oct–4 Nov 2026",
+    "buildTime": "October–November",
     "buildEvidence": "KiCad backups and rail-controller commits.",
     "readme": "readme.md",
     "size": [
@@ -244,7 +247,7 @@
       "[[J7|J7]]: jumper 1-2 = ON, 2-3 = OFF; no jumper = OFF."
     ],
     "purpose": "Convert the battery supply to a regulated 5 V or 3.3 V rail.",
-    "buildTime": "17–18 Oct 2026",
+    "buildTime": "October",
     "buildEvidence": "The initial KiCad backup and commit cluster, before the November fabrication pass.",
     "readme": "readme.md",
     "size": [
@@ -270,7 +273,7 @@
       "Azimuth and Elevation [[P5|endstop inputs]]"
     ],
     "purpose": "Drive the azimuth and elevation axes of a SatNOGS ground station rotator over RS-485.",
-    "buildTime": "9–27 Aug 2026",
+    "buildTime": "August",
     "buildEvidence": "Available August commit cluster. Local October backups show later activity.",
     "readme": "readme.md",
     "size": [
@@ -293,7 +296,7 @@
       "[[U1|INA219]] address · 0x4C (A1 = SCL, A0 = VCC) — battery current/voltage monitoring"
     ],
     "purpose": "Hold and protect the 1S6P battery pack for the 1U system.",
-    "buildTime": "13–16 Jul 2026",
+    "buildTime": "July",
     "buildEvidence": "Densest KiCad backup cluster for this revision. Earlier March and June work is visible.",
     "readme": "readme.md",
     "size": [
@@ -322,8 +325,8 @@
       "LoRa RA-02"
     ],
     "purpose": "Test the nRF24L01 and LoRa RA-02 on an Arduino Uno and measure module power draw.",
-    "buildTime": "17–20 Apr 2026",
-    "buildEvidence": "KiCad backup cluster through the first GitHub PCB commit on 20 April.",
+    "buildTime": "April",
+    "buildEvidence": "KiCad backup cluster through the first GitHub PCB commit in April.",
     "readme": "readme.md",
     "size": [
       69.596,
@@ -344,7 +347,7 @@
       "It contains the four-switch power stage, drivers, sensing, input reverse-current blocking, gate-bias supply and latched fault shutdown."
     ],
     "purpose": "Prototype a four-switch solar charger controlled by an external EPS MCU.",
-    "buildTime": "3 Nov 2026",
+    "buildTime": "November",
     "buildEvidence": "Single dated KiCad backup. Full development window is uncertain.",
     "readme": "readme.md",
     "pending": "Prototype review and validation pending.",
@@ -368,7 +371,7 @@
       "The schematic and placement are available; signal routing is still in progress."
     ],
     "purpose": "Evaluate a single-channel MPPT buck-boost charger for a 4S battery.",
-    "buildTime": "5–18 Oct 2026",
+    "buildTime": "October",
     "buildEvidence": "First and last board commits available. Routing is pending.",
     "readme": "readme.md",
     "pending": "Signal routing is pending.",
@@ -392,7 +395,7 @@
       "Separate shaft encoder schematic and placed PCB, four copies required."
     ],
     "purpose": "Measure shaft angle for the reaction wheel using an AS5047U encoder.",
-    "buildTime": "29 Oct 2026",
+    "buildTime": "October",
     "buildEvidence": "Dated placement review in the reaction-wheel README. Full development window is uncertain.",
     "readme": "readme.md",
     "pending": "Placement review only. Routing is pending.",
@@ -412,7 +415,7 @@
     "rev": "Local design",
     "notes": [],
     "purpose": "Explore a controller schematic for a 3U reaction wheel.",
-    "buildTime": "18 Jun–6 Jul 2026",
+    "buildTime": "June–July",
     "buildEvidence": "Related Notion schematic date and the saved local KiCad file date. Approximate, with no commit history for this copy.",
     "readme": "readme.md",
     "pending": "Schematic study. PCB placement and routing are pending.",
