@@ -10,6 +10,7 @@ import tempfile
 import zipfile
 
 import pcbnew as pcb
+from batch_obc_model import batch_obc_glb
 
 PROJECT = Path(__file__).resolve().parents[1]
 WORKSPACE = PROJECT.parent
@@ -179,7 +180,8 @@ def export_model(spec, file, folder, details):
         if result.returncode or not output.exists() or output.stat().st_size >= 100_000_000:
             print(f"{spec['id']} GLB export did not replace the existing model: {result.stderr[-350:]}", flush=True)
             return
-        model.write_bytes(output.read_bytes())
+        data = output.read_bytes()
+        model.write_bytes(batch_obc_glb(data) if spec["id"] == "obc" else data)
     details["model"] = model.name
     details["missingModels"] = sorted(set(re.findall(r"Could not add 3D model for ([^.]+)\.", result.stdout + result.stderr)))
     print(f"{spec['id']} model: {model.stat().st_size} bytes; missing {details['missingModels']}", flush=True)

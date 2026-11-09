@@ -254,13 +254,14 @@ async function openView(name) {
   } else {
     hint.textContent = 'Drag to orbit · Scroll to zoom';
     if (!board.model) return message('No 3D model was exported for this design.');
-    const url = asset(board.model);
+    const isObc = current.id === 'obc';
+    const url = asset(board.model) + (isObc ? '?batched=1' : '');
     const missing = board.missingModels.length;
     message('Loading KiCad 3D model…');
     try {
       const { mountModel } = await import('./model.js');
       if (request !== viewRequest) return;
-      dispose = mountModel(container, url, missing);
+      dispose = mountModel(container, url, missing, isObc);
     } catch {
       if (request === viewRequest) message('The 3D viewer could not start on this device.');
     }

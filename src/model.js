@@ -58,7 +58,7 @@ function release(scene) {
   });
 }
 
-export function mountModel(container, url, missing) {
+export function mountModel(container, url, missing, renderOnChange = false) {
   const renderer = new THREE.WebGLRenderer({antialias: true, alpha: false});
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const stage = node('div', {class: 'model'});
@@ -90,6 +90,10 @@ export function mountModel(container, url, missing) {
   const silkscreens = [];
   const localEye = new THREE.Vector3();
 
+  function requestRender() {
+    if (!frame && !disposed) frame = requestAnimationFrame(draw);
+  }
+
   function reset(top = false) {
     if (!ready) return;
     const halfAngle = THREE.MathUtils.degToRad(camera.fov / 2);
@@ -98,6 +102,7 @@ export function mountModel(container, url, missing) {
     camera.position.copy(new THREE.Vector3(...(top ? [0, 1, .001] : [.28, .88, .55])).normalize().multiplyScalar(distance));
     controls.target.set(0, 0, 0);
     controls.update();
+    requestRender();
   }
   fitButton.onclick = () => reset();
   topButton.onclick = () => reset(true);
@@ -107,12 +112,14 @@ export function mountModel(container, url, missing) {
     renderer.setSize(stage.clientWidth, stage.clientHeight, false);
     camera.aspect = stage.clientWidth / stage.clientHeight;
     camera.updateProjectionMatrix();
+    requestRender();
   }
   const observer = new ResizeObserver(resize);
   observer.observe(stage);
   resize();
-  const draw = () => {
-    controls.update();
+  function draw() {
+    frame = 0;
+    const moved = controls.update();
     if (silkscreens.length) {
       assembly.worldToLocal(localEye.copy(camera.position));
       for (const layer of silkscreens) {
@@ -121,9 +128,10 @@ export function mountModel(container, url, missing) {
       }
     }
     renderer.render(scene, camera);
-    frame = requestAnimationFrame(draw);
-  };
-  frame = requestAnimationFrame(draw);
+    if (!renderOnChange || moved) requestRender();
+  }
+  if (renderOnChange) controls.addEventListener('change', requestRender);
+  requestRender();
 
   const loader = new GLTFLoader();
   loader.register(parser => ({
