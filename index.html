@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Padam Sarda’s PCB portfolio. Explore layouts, schematics, 3D models, and bills of materials.">
+  <meta name="theme-color" content="#f6f4ee">
+  <title>Padam Sarda · PCB Portfolio</title>
+</head>
+<body>
+  <header class="masthead">
+    <a class="signature" href="#adcs"><span class="mark" aria-hidden="true">✣</span><span>Padam Sarda<small>Hardware portfolio</small></span></a>
+    <nav aria-label="Portfolio links"><button id="open-index" type="button">Board index <span aria-hidden="true">↗</span></button><a href="https://github.com/padamsarda">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <div id="project-nav" aria-label="Featured boards"></div>
+    <div id="project"><p class="notice">Loading board archive…</p></div>
+  </main>
+  <footer class="footer"><span>PADAM SARDA <span class="slash">/</span> PCB PORTFOLIO</span><span>Team Anant · BITS Pilani</span></footer>
+  <dialog id="index"><div class="dialog-top"><div><p class="eyebrow">Project archive</p><h2>Board index</h2></div><form method="dialog"><button class="icon" aria-label="Close board index">×</button></form></div><label class="search-label">Find a board<input id="board-search" type="search" placeholder="Search by board or collection"></label><div id="index-list"></div></dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

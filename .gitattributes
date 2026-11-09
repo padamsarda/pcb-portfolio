@@ -1,0 +1,4 @@
+* text=auto
+public/boards/**/*.svg -diff linguist-generated=true
+public/boards/**/*.glb binary linguist-generated=true
+public/boards/**/*.json linguist-generated=true
